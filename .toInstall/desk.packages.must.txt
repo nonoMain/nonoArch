@@ -1,0 +1,20 @@
+# Xorg
+mesa
+xorg
+xorg-server
+xorg-drivers
+xorg-xkill
+xorg-xinit
+xorg-apps
+xterm
+xdotool
+xclip
+xdg-user-dirs
+# Login manager
+lightdm
+lightdm-gtk-greeter
+lightdm-webkit2-greeter
+# Audio
+pulseaudio
+pulseaudio-alsa
+pulseaudio-bluetooth

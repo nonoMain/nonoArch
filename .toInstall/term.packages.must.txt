@@ -1,0 +1,8 @@
+# Must
+linux-headers
+networkmanager
+archlinux-keyring
+# Utils
+binutils
+sudo
+vim

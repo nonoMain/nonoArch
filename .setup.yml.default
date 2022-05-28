@@ -1,0 +1,127 @@
+## This file specifies the details of the wanted system
+## such as admin user, disk info and other configurations
+## Comments will be commented using double '#' for ease of editing
+#
+## Please read the options that you are going to choose before editing the file
+## and running the script
+#
+## System section ##
+## hostname - the name of the machine
+## desktop_environment - what desktop environment to install (supported: 'kde', 'gnome, 'xfce')
+##                    if empty will not install any desktop environment (server mode)
+#
+## root section ##
+## password - the root password
+#
+## Admin user section ##
+## name - name of the admin user
+## password - password for this user
+## keeper_backup_to_restore - a link to a .zip archive of a user configuration
+##                            made by or supported by keeper tool (github.com/nonoMain/keeper)
+##                            if left empty will not restore any user configuration
+##                            if 'default' will go to my own keepered archive
+#
+## Disk section ##
+## auto_allocate - whether to use the script to fully partition a disk (erase all the disk's data)
+## path - the path to the device you want to act on
+## partitions - the information about the partitions, in case you chose to auto auto_allocate then
+##              you need to specify the size of each one
+##              in case you chose to act on aleardy existing partitions the you need to specify
+##              the path to each one (can be on different devices)
+## Note:
+## the way you specify partitions to auto_allocate needs to look somthing like:
+## disk:
+##   auto_allocate: 'true'
+##   path: '/dev/sda'
+##   partitions:
+##     boot:
+##       size: '+500M'
+##     swap:
+##       size: '+2G'
+##     root:
+##       size: '+20G'
+##     home:
+##       size: '-0'
+##       encrypted: 'false'
+##
+## the way you specify partitions that already exist needs to look somthing like:
+## disk:
+##   auto_allocate: 'false'
+##   partitions:
+##     boot:
+##       partition: '/dev/sda1'
+##     swap:
+##       partition: '/dev/sda2'
+##     root:
+##       partition: '/dev/sda3'
+##     home:
+##       partition: '/dev/sda4'
+##       encrypted: 'false'
+#
+## Disk - boot section ##
+## the boot partition is optional, its responsible on loading the system on start. if not specified
+## the script will not create it but you will not be able to load the system if you don't aleardy
+## have a boot partition
+#
+## Disk - swap section ##
+## the swap partition is optional, its responsible on using storage as RAM when needed. if not
+## specified then the script will not create it.
+#
+## Disk - root section ##
+## the root partition is not optional, its the partition that holds all the system files and
+## programs and incase you don't have a home partition its also the place all the users are stored
+#
+## Disk - home section ##
+## the home partition is optional, its the partition that holds all the users. its good to have it
+## to keep your information seperate from the rest of the system so you can easily switch systems
+## and not be afraid or to encrypt the users information (the script supports LUKS encryption)
+#
+## Disk - encryption section ##
+## in case you have specified a home partition and you want to encrypt it, you need to specify
+## encrypted: 'true' under the home partition
+## and you need to specify a passphrase so somthing like:
+## encrypted: 'true'
+## passphrase: '1234'
+
+system:
+  hostname: "admin-machine"
+  desktop_environment: 'kde'
+
+root_user:
+  password: '1234'
+
+admin_user:
+  name: 'admin'
+  password: '1234'
+  keeper_backup_to_restore: ''
+
+disk:
+  auto_allocate: 'true'
+  path: '/dev/sda'
+  partitions:
+    boot:
+      size: '+500M'
+    swap:
+      size: '+2G'
+    root:
+      size: '+20G'
+    home:
+      size: '-0'
+      encrypted: 'false'
+
+## Next two are optional
+
+#to_install:
+#  term:
+#    utils: 'true'
+#    dev: 'true'
+#  desk:
+#    utils: 'true'
+#    dev: 'true'
+#    creative: 'true'
+#    office: 'true'
+
+#advenced:
+#  kernel: 'linux'
+#  copy_log_to_machine: 'true'
+#  detect_and_install_vm_utils: 'true'

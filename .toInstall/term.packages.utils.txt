@@ -1,0 +1,35 @@
+# Utils
+wget
+curl
+tree
+openssh
+make
+cmake
+automake
+autoconf
+bash-completion
+top
+htop
+btop
+lsd
+neofetch
+lsb-release
+# Tools
+tmux
+net-tools
+npm
+ninja
+flatpak
+neovim
+# Other file systems
+dosfstools
+exfat-utils
+ntfs-3g
+mtpfs
+gvfs-mtp
+# Archive tools
+unrar
+unzip
+zip
+gzip
+bzip2

@@ -1,0 +1,23 @@
+# Editors
+nvim
+# Utils
+strace
+strings
+tldr
+lazygit
+pandoc
+# Languages
+nasm
+python2
+python3
+jdk-openjdk
+go
+gcc
+clang
+lua
+# tools for languages
+valgrind
+python-pip
+ghex
+# Language servers
+gopls

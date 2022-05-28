@@ -1,0 +1,27 @@
+# Kde-plasma
+plasma-desktop
+plasma-meta
+plasma-pa
+packagekit-qt5
+kdeplasma-addons
+audiocd-kio
+bluedevil
+kcoreaddons
+kwalletmanager
+kscreen
+ksysguard
+kcodecs
+kde-gtk-config
+appmenu-gtk-module
+libdbusmenu-glib
+# Themes
+kvantum-qt5
+breeze
+breeze-gtk
+# Utils
+konsole
+dolphin
+kdeconnect
+kinfocenter
+spectacle
+okular

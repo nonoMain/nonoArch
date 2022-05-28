@@ -1,0 +1,4 @@
+# Fonts
+ttf-ms-fonts
+ttf-vista-fonts
+alefbet

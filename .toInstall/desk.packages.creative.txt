@@ -1,0 +1,4 @@
+# Creative progs
+blender
+gimp
+obs-studio

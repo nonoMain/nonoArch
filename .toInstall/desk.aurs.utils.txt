@@ -1,0 +1,4 @@
+# Progs
+brave-bin
+# Fonts
+nerd-fonts-hack

@@ -1,0 +1,5 @@
+# Base desktop utils
+firefox
+alacritty
+xournalpp
+vlc
