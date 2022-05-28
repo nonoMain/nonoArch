@@ -1,3 +1,3 @@
 # Gnome
 gnome
-gnome-extras
+gnome-extra

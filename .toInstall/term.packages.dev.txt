@@ -1,8 +1,7 @@
 # Editors
-nvim
+neovim
 # Utils
 strace
-strings
 tldr
 lazygit
 pandoc

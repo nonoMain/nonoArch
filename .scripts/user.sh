@@ -18,7 +18,8 @@ download_aurs_from_file ()
 		elif [[ "$line" =~ ^$ ]]; then
 			continue
 		else
-			echo_msg "Installing(paru[AUR]) F:$(basename $file_name)	$title	P:$line"
+			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-25s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
+			printf "[ MSG ] Installing F:%-25s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
 			$aur_helper_name -S --noconfirm --needed ${line} || echo_error_msg "Failed to download AUR: $line"
 		fi
 	done
@@ -54,11 +55,10 @@ echo_msg "                             Installing Aur packages"
 echo_msg "--------------------------------------------------------------------------------"
 
 download_aurs_from_file "$HOME/.toInstall/desk.aurs.must.txt"
-[[ "$to_install_term_dev" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/term.aurs.dev.txt"
 if [[ "$system_desktop_environment" != 'server' ]]; then
 	[[ "$to_install_desk_dev" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.aurs.dev.txt"
-	[[ "$to_install_desk_utils" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.packages.utils.txt"
-	[[ "$to_install_desk_office" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.packages.office.txt"
+	[[ "$to_install_desk_utils" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.aurs.utils.txt"
+	[[ "$to_install_desk_office" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.aurs.office.txt"
 fi
 
 #pip install neovim || (echo_error_msg "Failed to install neovim"; wait_for_any_key_press "Press any key to continue" )

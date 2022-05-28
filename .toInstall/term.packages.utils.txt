@@ -1,3 +1,4 @@
+# Needed
 # Utils
 wget
 curl
@@ -8,7 +9,6 @@ cmake
 automake
 autoconf
 bash-completion
-top
 htop
 btop
 lsd

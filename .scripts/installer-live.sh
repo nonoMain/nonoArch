@@ -7,16 +7,6 @@
 
 kernel=$advenced_kernel
 
-encrypt_partition()
-{
-	local passphrase=$1; shift
-	local partition=$1; shift
-	local name_of_enc_partition=$1; shift
-
-	echo -n $passphrase | cryptsetup luksFormat $partition
-	echo -n $passphrase | cryptsetup luksOpen $partition $name_of_enc_partition
-}
-
 ##--------------------------code---------------------------##
 
 if [[ "$parsed_info_has_home" == 'true' ]]; then
@@ -25,11 +15,13 @@ if [[ "$parsed_info_has_home" == 'true' ]]; then
 		echo_msg "                    encrypting the home partition"
 		echo_msg "--------------------------------------------------------------------------------"
 
-		encrypt_partition $disk_partitions_home_passphrase $disk_partitions_home_partition $disk_partitions_home_name_after_decryption
+		echo_msg "passphrase for the home partition: $disk_partitions_home_passphrase"
+		echo -n $disk_partitions_home_passphrase | cryptsetup luksFormat $disk_partitions_home_partition
+		echo -n $disk_partitions_home_passphrase | cryptsetup luksOpen $disk_partitions_home_partition 'home-enc'
 
 		ORG_HOME_PARTITION=$disk_partitions_home_partition
 
-		disk_partitions_home_partition="/dev/mapper/$disk_partitions_home_name_after_decryption"
+		disk_partitions_home_partition="/dev/mapper/home-enc"
 	fi
 fi
 
@@ -107,13 +99,13 @@ pacstrap /mnt base base-devel $kernel $microcode linux-firmware \
  grub efibootmgr sudo \
  mtools os-prober dosfstools cryptsetup networkmanager
 
-if [ "$parsed_info_has_home" == 'true' ] && [ "$disk_partitions_home_encrypted" == 'true' ] && [ "$disk_partitions_home_decrypt_on_boot" == 'true' ]; then
+if [ "$parsed_info_has_home" == 'true' ] && [ "$disk_partitions_home_encrypted" == 'true' ]; then
 	echo_msg "--------------------------------------------------------------------------------"
 	echo_msg "                       Setting decrypt on boot"
 	echo_msg "--------------------------------------------------------------------------------"
 	home_uuid=$(blkid -o value -s UUID $ORG_HOME_PARTITION)
 	echo $home_uuid
-	echo "$disk_partitions_home_name_after_decryption	UUID="$home_uuid"	none	timeout=180s" >> /mnt/etc/crypttab
+	echo "home-enc	UUID="$home_uuid"	none	timeout=180s" >> /mnt/etc/crypttab
 fi
 
 echo_msg "--------------------------------------------------------------------------------"

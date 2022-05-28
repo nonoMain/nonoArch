@@ -17,7 +17,8 @@ download_packages_from_file ()
 		elif [[ "$line" =~ ^$ ]]; then
 			continue
 		else
-			echo_msg "Installing(pacman) F:$(basename $file_name)	$title	P:$line"
+			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-25s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
+			printf "[ MSG ] Installing F:%-25s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
 			sudo pacman -S --noconfirm --needed ${line} || echo_error_msg "Failed to download package: $line"
 		fi
 	done
@@ -143,14 +144,13 @@ download_packages_from_file "$HOME/.toInstall/term.packages.must.txt"
 
 if [[ "$system_desktop_environment" != 'server' ]]; then
 	echo_msg "--------------------------------------------------------------------------------"
-	echo_msg "                 Installing desktop packages for $system_desktop_environment"
+	echo_msg "                        Installing desktop packages"
 	echo_msg "--------------------------------------------------------------------------------"
 	download_packages_from_file "$HOME/.toInstall/desk.packages.must.txt"
-	[[ "$to_install_desk_utils" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.utils.txt"
-	[[ "$to_install_desk_dev" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.dev.txt"
-	[[ "$to_install_desk_creative" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.creative.txt"
-	[[ "$to_install_desk_office" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.office.txt"
 
+	echo_msg "--------------------------------------------------------------------------------"
+	echo_msg "                          Installing $system_desktop_environment packages"
+	echo_msg "--------------------------------------------------------------------------------"
 	if [[ "$system_desktop_environment" == 'kde' ]]; then
 		download_packages_from_file "$HOME/.toInstall/desk.packages.kde.txt"
 	elif [[ "$system_desktop_environment" == 'gnome' ]]; then
@@ -158,7 +158,12 @@ if [[ "$system_desktop_environment" != 'server' ]]; then
 	elif [[ "$system_desktop_environment" == 'xfce' ]]; then
 		download_packages_from_file "$HOME/.toInstall/desk.packages.xfce.txt"
 	fi
-fi
 
-# Lighdm 
-sed -i 's/^#logind-check-graphical=true/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
+	[[ "$to_install_desk_utils" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.utils.txt"
+	[[ "$to_install_desk_dev" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.dev.txt"
+	[[ "$to_install_desk_creative" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.creative.txt"
+	[[ "$to_install_desk_office" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/desk.packages.office.txt"
+
+	# Lighdm 
+	sed -i 's/^#logind-check-graphical=true/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
+fi

@@ -36,6 +36,10 @@ echo_msg ()
 	echo -e "[ ${MSG_COLOR}MSG${NC} ] $1" > /dev/tty
 	echo -e "[ MSG ] $1"
 }
+echo_msg_tty ()
+{
+	echo -e "[ ${MSG_COLOR}MSG${NC} ] $1" > /dev/tty
+}
 
 # @brief echo the given text as an ok message
 # @param $1 the text to echo
@@ -43,6 +47,10 @@ echo_ok_msg ()
 {
 	echo -e "[ ${OK_COLOR}OK${NC}  ] $1" > /dev/tty
 	echo -e "[ OK  ] $1"
+}
+echo_ok_msg_tty ()
+{
+	echo -e "[ ${OK_COLOR}OK${NC}  ] $1" > /dev/tty
 }
 
 # @brief echo the given text as a warning message
@@ -52,6 +60,10 @@ echo_warning_msg ()
 	echo -e "[ ${WARNING_COLOR}WAR${NC} ] $1" > /dev/tty
 	echo -e "[ WAR ] $1"
 }
+echo_warning_msg_tty ()
+{
+	echo -e "[ ${WARNING_COLOR}WAR${NC} ] $1" > /dev/tty
+}
 
 # @brief echo the given text as an error message
 # @param $1 the text to echo
@@ -59,6 +71,10 @@ echo_error_msg ()
 {
 	echo -e "[ ${ERROR_COLOR}ERR${NC} ] $1" > /dev/tty
 	echo -e "[ ERR ] $1"
+}
+echo_error_msg_tty ()
+{
+	echo -e "[ ${ERROR_COLOR}ERR${NC} ] $1" > /dev/tty
 }
 
 # @brief waits until any key is pressed
@@ -242,7 +258,7 @@ local to_exit='false'
 			else
 				if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
 					echo_ok_msg "home encryption detected, will encrypt home partition"
-					if [[ -z $disk_partitions_home_passphrase ]]; then
+					if [[ -z "$disk_partitions_home_passphrase" ]]; then
 						echo_error_msg "home passphrase didn't detected"
 						to_exit='true'
 					else

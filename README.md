@@ -5,12 +5,8 @@ This is a set of scripts meant to install an Arch machine with ease
 </p>
 
 ## Todo:
-- [ ] rewrite the parsing check
-- [ ] rethink advenced options
-- [ ] add seperation between package bundles
-- [ ] check the users password capability
+- [ ] check the user password expansion
 - [ ] add keeper config
-- [ ] add tiling in kde
 
 ## The installation
 ### Create a live boot with the arch ISO

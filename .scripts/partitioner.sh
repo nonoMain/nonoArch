@@ -20,10 +20,6 @@ root_partition=''
 home_partition=''
 
 ##--------------------------code---------------------------##
-echo_msg "--------------------------------------------------------------------------------"
-echo_msg "           This is the partitioner script - will partition the disk"
-echo_msg "                    acording to the layout speficied"
-echo_msg "--------------------------------------------------------------------------------"
 
 sgdisk -Zo ${disk_path} # zap all on disk
 sgdisk -a 2048 -o ${disk_path} # new gpt disk 2048 alignment
