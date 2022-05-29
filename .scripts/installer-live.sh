@@ -12,10 +12,9 @@ kernel=$advenced_kernel
 if [[ "$parsed_info_has_home" == 'true' ]]; then
 	if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
 		echo_msg "--------------------------------------------------------------------------------"
-		echo_msg "                    encrypting the home partition"
+		echo_msg "                         Encrypting the home partition"
 		echo_msg "--------------------------------------------------------------------------------"
 
-		echo_msg "passphrase for the home partition: $disk_partitions_home_passphrase"
 		echo -n $disk_partitions_home_passphrase | cryptsetup luksFormat $disk_partitions_home_partition
 		echo -n $disk_partitions_home_passphrase | cryptsetup luksOpen $disk_partitions_home_partition 'home-enc'
 
@@ -26,7 +25,7 @@ if [[ "$parsed_info_has_home" == 'true' ]]; then
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                          wiping the partitions"
+echo_msg "                             Wiping the partitions"
 echo_msg "--------------------------------------------------------------------------------"
 
 wipefs -a -f $disk_partitions_root_partition
@@ -41,7 +40,7 @@ if [[ "$parsed_info_has_home" == 'true' ]]; then
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                            setting filesystems"
+echo_msg "                              Setting filesystems"
 echo_msg "--------------------------------------------------------------------------------"
 
 mkfs.ext4 -L ROOT $disk_partitions_root_partition
@@ -50,7 +49,7 @@ mkfs.ext4 -L ROOT $disk_partitions_root_partition
 
 if [[ "$parsed_info_has_swap" == 'true' ]]; then
 	echo_msg "--------------------------------------------------------------------------------"
-	echo_msg "                       Creating & Activating swap"
+	echo_msg "                           Creating & activating swap"
 	echo_msg "--------------------------------------------------------------------------------"
 
 	mkswap $disk_partitions_swap_partition
@@ -59,7 +58,7 @@ fi
 
 umount -A --recursive /mnt || true
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                         Mounting the partitions"
+echo_msg "                             Mounting the partitions"
 echo_msg "--------------------------------------------------------------------------------"
 
 mount $disk_partitions_root_partition /mnt
@@ -74,14 +73,14 @@ fi
 
 if ! grep -qs '/mnt' /proc/mounts; then
 	echo_msg   "--------------------------------------------------------------------------------"
-    echo_error_msg "                    Path /mnt Unmounted so can not continue"
+    echo_error_msg "                       Path /mnt Unmounted so can not continue"
 	echo_msg   "--------------------------------------------------------------------------------"
 	wait_for_any_key_press "Press any key to reboot"
     reboot
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                         Installing base system"
+echo_msg "                             Installing base system"
 echo_msg "--------------------------------------------------------------------------------"
 CPU_TYPE=$(grep vendor_id /proc/cpuinfo)
 case "$CPU_TYPE" in
@@ -101,7 +100,7 @@ pacstrap /mnt base base-devel $kernel $microcode linux-firmware \
 
 if [ "$parsed_info_has_home" == 'true' ] && [ "$disk_partitions_home_encrypted" == 'true' ]; then
 	echo_msg "--------------------------------------------------------------------------------"
-	echo_msg "                       Setting decrypt on boot"
+	echo_msg "                             Setting decrypt on boot"
 	echo_msg "--------------------------------------------------------------------------------"
 	home_uuid=$(blkid -o value -s UUID $ORG_HOME_PARTITION)
 	echo $home_uuid
@@ -124,7 +123,7 @@ elif lspci | grep -E "Integrated Graphics Controller"; then
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                            Generating fstab"
+echo_msg "                               Generating fstab"
 echo_msg "--------------------------------------------------------------------------------"
 
 genfstab -U /mnt
@@ -132,7 +131,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                     Setting hostname and hosts file"
+echo_msg "                         Setting hostname and hosts file"
 echo_msg "--------------------------------------------------------------------------------"
 echo $system_hostname > /mnt/etc/hostname
 

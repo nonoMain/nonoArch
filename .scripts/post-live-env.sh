@@ -4,11 +4,11 @@
 # @note all the setup variables are defined and the library is available
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "               Post setup the environment for the installation"
+echo_msg "                 Post setup the environment for the installation"
 echo_msg "--------------------------------------------------------------------------------"
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                         Enabling Essential Services"
+echo_msg "                           Enabling Essential Services"
 echo_msg "--------------------------------------------------------------------------------"
 
 systemctl enable NetworkManager.service
@@ -24,7 +24,7 @@ sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                  Cleaning up the files copied to the system"
+echo_msg "                   Cleaning up the files copied to the system"
 echo_msg "--------------------------------------------------------------------------------"
 
 rm -r $HOME/.toInstall

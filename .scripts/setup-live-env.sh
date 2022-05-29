@@ -4,11 +4,11 @@
 # @note all the setup variables are defined and the library is available
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "              Setup the environment for the installation                        "
+echo_msg "                     Setup the environment for the installation"
 echo_msg "--------------------------------------------------------------------------------"
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "        Setup mirrors, keys and parallel download for downloading packages"
+echo_msg "          Setup mirrors, keys and parallel download for downloading packages"
 echo_msg "--------------------------------------------------------------------------------"
 
 timedatectl set-ntp true
@@ -27,13 +27,13 @@ sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 pacman -Sy --noconfirm --needed
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "       Installing utils needed for the rest of the script (in this env)"
+echo_msg "                 Installing utils needed for the rest of the script"
 echo_msg "--------------------------------------------------------------------------------"
 
 pacman -S --noconfirm --needed gptfdisk glibc
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "               Unmounting everything before the installation"
+echo_msg "                   Unmounting everything before the installation"
 echo_msg "--------------------------------------------------------------------------------"
 
 umount -A --recursive /mnt || true

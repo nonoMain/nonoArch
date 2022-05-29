@@ -20,7 +20,16 @@ download_aurs_from_file ()
 		else
 			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
 			printf "[ MSG ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
-			$aur_helper_name -S --noconfirm --needed ${line} || echo_error_msg "Failed to download AUR: $line"
+			$aur_helper_name -S --noconfirm --needed ${line} && installed=true || installed=false
+			if [ $installed == false ]; then
+				echo_warning_msg "Failed to download package: $line, retrying..."
+				$aur_helper_name -S --noconfirm --needed ${line} && installed=true || installed=false
+				if [ $installed == true ]; then
+					echo_ok_msg "Successfully installed package: $line, on retry"
+				else
+					echo_error_msg "Failed to install package: $line, on retry"
+				fi
+			fi
 		fi
 	done
 }
@@ -37,7 +46,7 @@ EOF
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                           Installing AUR helper"
+echo_msg "                              Installing AUR helper"
 echo_msg "--------------------------------------------------------------------------------"
 
 sudo pacman --noconfirm -S --needed base-devel git

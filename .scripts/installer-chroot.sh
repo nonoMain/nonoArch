@@ -19,7 +19,16 @@ download_packages_from_file ()
 		else
 			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
 			printf "[ MSG ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
-			sudo pacman -S --noconfirm --needed ${line} || echo_error_msg "Failed to download package: $line"
+			sudo pacman -S --noconfirm --needed ${line} && installed=true || installed=false
+			if [ $installed == false ]; then
+				echo_warning_msg "Failed to download package: $line, retrying..."
+				sudo pacman -S --noconfirm --needed ${line} && installed=true || installed=false
+				if [ $installed == true ]; then
+					echo_ok_msg "Successfully installed package: $line, on retry"
+				else
+					echo_error_msg "Failed to install package: $line, on retry"
+				fi
+			fi
 		fi
 	done
 }
@@ -27,7 +36,7 @@ download_packages_from_file ()
 ##--------------------------code---------------------------##
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "        Setting up mirrors, keys and parallel Downloading for downloads"
+echo_msg "           Setting up mirrors, keys and parallel Downloading for downloads"
 echo_msg "--------------------------------------------------------------------------------"
 
 timedatectl set-ntp true
@@ -46,12 +55,12 @@ sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 pacman -Sy --noconfirm --needed
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                      Set timezone to $timezone_link_data"
+echo_msg "                          Set timezone to $timezone_link_data"
 echo_msg "--------------------------------------------------------------------------------"
 ln -sf /usr/share/zoneinfo/$timezone_link_data /etc/localtime
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                           Setting up the clock"
+echo_msg "                              Setting up the clock"
 echo_msg "--------------------------------------------------------------------------------"
 # Setting up clock.
 hwclock --systohc
@@ -59,11 +68,11 @@ echo_msg "----------------------------------------------------------------------
 echo_msg "                Generating and setting up language as US and locales"
 echo_msg "--------------------------------------------------------------------------------"
 
-echo_msg "set en_US locale"
+echo_msg "uncommenting en_US locale"
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 # sed -i 's/^#en_US ISO-8859-1/en_US ISO-8859-1/' /etc/locale.gen
 if [[ $(curl -s https://ifconfig.co/country-iso) == 'IL' ]]; then
-	echo_msg "set he_IL locale"
+	echo_msg "uncommenting he_IL locale"
 	sed -i 's/^#he_IL.UTF-8 UTF-8/he_IL.UTF-8 UTF-8/' /etc/locale.gen
 	# sed -i 's/^#he_IL ISO-8859-8/he_IL ISO-8859-8/' /etc/locale.gen
 fi
@@ -81,14 +90,14 @@ if [[ $parsed_info_has_boot == 'true' ]]; then
 	# check if we have uefi or bios
 	if [[ -d /sys/firmware/efi ]]; then
 		echo_msg "--------------------------------------------------------------------------------"
-		echo_msg "                          Installing UEFI bootloader"
+		echo_msg "                            Installing UEFI bootloader"
 		echo_msg "--------------------------------------------------------------------------------"
 		pacman -S --noconfirm --needed grub efibootmgr
 		grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=grub_uefi
 		grub-mkconfig -o /boot/grub/grub.cfg
 	else
 		echo_msg "--------------------------------------------------------------------------------"
-		echo_msg "                          Installing BIOS bootloader"
+		echo_msg "                            Installing BIOS bootloader"
 		echo_msg "--------------------------------------------------------------------------------"
 		pacman -S --noconfirm --needed grub
 		grub-install --target=i386-pc --boot-directory=/boot/
@@ -97,13 +106,13 @@ if [[ $parsed_info_has_boot == 'true' ]]; then
 
 	# Creating grub config file.
 	echo_msg "--------------------------------------------------------------------------------"
-	echo_msg "                       Creating Bootloader config file"
+	echo_msg "                          Creating Bootloader config file"
 	echo_msg "--------------------------------------------------------------------------------"
 	grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                         Adding user $admin_user_name as admin"
+echo_msg "                           Adding user $admin_user_name as admin"
 echo_msg "--------------------------------------------------------------------------------"
 useradd -m $admin_user_name
 usermod -aG wheel,tty $admin_user_name
@@ -111,32 +120,8 @@ usermod -aG wheel,tty $admin_user_name
 echo "root:$root_user_password" | chpasswd
 echo "$admin_user_name:$admin_user_password" | chpasswd
 
-# Installation files
-# desk.aurs.dev.txt
-# desk.packages.creative.txt
-# desk.packages.dev.txt
-# desk.packages.gnome.txt
-# desk.packages.kde.txt
-# desk.packages.must.txt
-# desk.packages.office.txt
-# desk.packages.utils.txt
-# desk.packages.xfce.txt
-# term.aurs.dev.txt
-# term.packages.dev.txt
-# term.packages.must.txt
-# term.packages.utils.txt
-
-# Auto install must packages
-# and install the rest based on the variables:
-# to_install_term_utils='true'
-# to_install_term_dev='true'
-# to_install_desk_utils='true'
-# to_install_desk_dev='true'
-# to_install_desk_creative='true'
-# to_install_desk_office='true'
-
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                         Installing terminal packages"
+echo_msg "                           Installing terminal packages"
 echo_msg "--------------------------------------------------------------------------------"
 download_packages_from_file "$HOME/.toInstall/term.packages.must.txt"
 [[ "$to_install_term_utils" == 'true' ]] && download_packages_from_file "$HOME/.toInstall/term.packages.utils.txt"
@@ -144,13 +129,9 @@ download_packages_from_file "$HOME/.toInstall/term.packages.must.txt"
 
 if [[ "$system_desktop_environment" != 'server' ]]; then
 	echo_msg "--------------------------------------------------------------------------------"
-	echo_msg "                        Installing desktop packages"
+	echo_msg "                        Installing desktop packages [$system_desktop_environment]"
 	echo_msg "--------------------------------------------------------------------------------"
 	download_packages_from_file "$HOME/.toInstall/desk.packages.must.txt"
-
-	echo_msg "--------------------------------------------------------------------------------"
-	echo_msg "                          Installing $system_desktop_environment packages"
-	echo_msg "--------------------------------------------------------------------------------"
 	if [[ "$system_desktop_environment" == 'kde' ]]; then
 		download_packages_from_file "$HOME/.toInstall/desk.packages.kde.txt"
 	elif [[ "$system_desktop_environment" == 'gnome' ]]; then
