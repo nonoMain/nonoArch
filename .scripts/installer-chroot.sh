@@ -17,8 +17,8 @@ download_packages_from_file ()
 		elif [[ "$line" =~ ^$ ]]; then
 			continue
 		else
-			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-25s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
-			printf "[ MSG ] Installing F:%-25s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
+			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
+			printf "[ MSG ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
 			sudo pacman -S --noconfirm --needed ${line} || echo_error_msg "Failed to download package: $line"
 		fi
 	done

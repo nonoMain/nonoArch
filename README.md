@@ -5,8 +5,8 @@ This is a set of scripts meant to install an Arch machine with ease
 </p>
 
 ## Todo:
-- [ ] check the user password expansion
-- [ ] add keeper config
+- check the user password expansion
+- add keeper config
 
 ## The installation
 ### Create a live boot with the arch ISO

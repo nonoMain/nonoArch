@@ -170,213 +170,213 @@ eval $( parse_yaml $SCRIPT_DIR/setup.yml )
 local to_exit='false'
 # System hostname check
 	if [[ -z "$system_hostname" ]]; then
-		echo_error_msg "system hostname didn't detected"
+		echo_error_msg_tty "system hostname didn't detected"
 		to_exit='true'
 	else
-		echo_ok_msg "system hostname detected"
+		echo_ok_msg_tty "system hostname detected"
 	fi
 # System desktop environment check
 	if [[ -z "$system_desktop_environment" ]]; then
-		echo_error_msg "system desktop environment didn't detected"
+		echo_error_msg_tty "system desktop environment didn't detected"
 		to_exit='true'
-	elif [[ $system_desktop_environment =~ ^(kde|gnome|xfce)$ ]]; then
-		echo_ok_msg "system desktop environment detected and valid"
+	elif [[ $system_desktop_environment =~ ^(kde|gnome|xfce|server)$ ]]; then
+		echo_ok_msg_tty "system desktop environment detected and valid"
 	else
-		echo_error_msg "system desktop environment detected but not valid"
+		echo_error_msg_tty "system desktop environment detected but not valid"
 		to_exit='true'
 	fi
 # Root password check
 	if [[ -z $root_user_password ]]; then
-		echo_error_msg "root user password didn't detected"
+		echo_error_msg_tty "root user password didn't detected"
 		to_exit='true'
 	else
-		echo_ok_msg "root user password detected"
-		root_user_password=$(sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/' <<< $root_user_password)
+		echo_ok_msg_tty "root user password detected"
+		#root_user_password=$(sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/' <<< $root_user_password)
 	fi
 # Admin name check
 	if [[ -z "$admin_user_name" ]]; then
-		echo_error_msg "admin username didn't detected"
+		echo_error_msg_tty "admin username didn't detected"
 		to_exit='true'
 	else
-		echo_ok_msg "admin username detected"
+		echo_ok_msg_tty "admin username detected"
 		if [[ !( "$admin_user_name" =~ ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ) ]]; then
-			echo_error_msg "admin username isn't valid (only lowercase, numbers, '-' and '_' are allowed)"
+			echo_error_msg_tty "admin username isn't valid (only lowercase, numbers, '-' and '_' are allowed)"
 			to_exit='true'
 		else
-			echo_ok_msg "admin username is valid"
+			echo_ok_msg_tty "admin username is valid"
 		fi
 	fi
 # Admin password check
 	if [[ -z "$admin_user_password" ]]; then
-		echo_error_msg "admin user password didn't detected"
+		echo_error_msg_tty "admin user password didn't detected"
 		to_exit='true'
 	else
-		echo_ok_msg "admin user password detected"
-		admin_user_password=$(sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/' <<< $admin_user_password)
+		echo_ok_msg_tty "admin user password detected"
+		#admin_user_password=$(sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/' <<< $admin_user_password)
 	fi
 	if [[ -z $disk_path ]]; then
-		echo_error_msg "disk path didn't detected"
+		echo_error_msg_tty "disk path didn't detected"
 		to_exit='true'
 	else
-		echo_ok_msg "disk path detected"
+		echo_ok_msg_tty "disk path detected"
 	fi
 # Partitions check (boot, swap, root, home) #
 	if [[ "$disk_auto_allocate" == 'false' ]]; then
 	# Boot partition check
 		if [[ -z "$disk_partitions_boot_partition" ]]; then
-			echo_warning_msg "boot partition didn't detected, make sure you have a way to boot your system"
+			echo_warning_msg_tty "boot partition didn't detected, make sure you have a way to boot your system"
 			parsed_info_has_boot='false'
 		else
-			echo_ok_msg "boot partition detected"
+			echo_ok_msg_tty "boot partition detected"
 			parsed_info_has_boot='true'
 		fi
 	# Swap partition check
 		if [[ -z "$disk_partitions_swap_partition" ]]; then
-			echo_warning_msg "swap partition didn't detected, the system won't have swap"
+			echo_warning_msg_tty "swap partition didn't detected, the system won't have swap"
 			parsed_info_has_swap='false'
 		else
-			echo_ok_msg "swap partition detected"
+			echo_ok_msg_tty "swap partition detected"
 			parsed_info_has_swap='true'
 		fi
 	# Root partition check
 		if [[ -z "$disk_partitions_root_partition" ]]; then
-			echo_error_msg "root partition didn't detected"
+			echo_error_msg_tty "root partition didn't detected"
 			to_exit='true'
 		else
-			echo_ok_msg "root partition detected"
+			echo_ok_msg_tty "root partition detected"
 		fi
 	# Home partition check
 		if [[ -z "$disk_partitions_home_partition" ]]; then
-			echo_warning_msg "home partition didn't detected, '/home' will be a part of the root"
+			echo_warning_msg_tty "home partition didn't detected, '/home' will be a part of the root"
 			parsed_info_has_home='false'
 		else
-			echo_ok_msg "home partition detected"
+			echo_ok_msg_tty "home partition detected"
 			parsed_info_has_home='true'
 			if [[ -z "$disk_partitions_home_encrypted" ]]; then
-				echo_error_msg "home encryption didn't detected"
+				echo_error_msg_tty "home encryption didn't detected"
 				to_exit='true'
 			else
 				if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
-					echo_ok_msg "home encryption detected, will encrypt home partition"
+					echo_ok_msg_tty "home encryption detected, will encrypt home partition"
 					if [[ -z "$disk_partitions_home_passphrase" ]]; then
-						echo_error_msg "home passphrase didn't detected"
+						echo_error_msg_tty "home passphrase didn't detected"
 						to_exit='true'
 					else
-						echo_ok_msg "home passphrase detected"
+						echo_ok_msg_tty "home passphrase detected"
 					fi
 				else
-					echo_ok_msg "home encryption detected, will not encrypt home partition"
+					echo_ok_msg_tty "home encryption detected, will not encrypt home partition"
 				fi
 			fi
 		fi
 	elif [[ "$disk_auto_allocate" == 'true' ]]; then
-		echo_ok_msg "auto-allocate disk detected"
-		echo_warning_msg "auto allocate will take over all of the disk, make sure that $disk_path is empty or unimportant"
+		echo_ok_msg_tty "auto-allocate disk detected"
+		echo_warning_msg_tty "auto allocate will take over all of the disk, make sure that $disk_path is empty or unimportant"
 	# Boot partition check
 		if [[ -z "$disk_partitions_boot_size" ]]; then
-			echo_warning_msg "boot partition & size didn't detected, make sure you have a way to boot your system"
+			echo_warning_msg_tty "boot partition & size didn't detected, make sure you have a way to boot your system"
 			parsed_info_has_boot='false'
 		else
-			echo_ok_msg "boot partition & size detected"
+			echo_ok_msg_tty "boot partition & size detected"
 			parsed_info_has_boot='true'
 		fi
 	# Swap partition check
 		if [[ -z "$disk_partitions_swap_size" ]]; then
-			echo_warning_msg "swap partition & size didn't detected, the system won't have swap"
+			echo_warning_msg_tty "swap partition & size didn't detected, the system won't have swap"
 			parsed_info_has_swap='false'
 		else
-			echo_ok_msg "swap partition & size detected"
+			echo_ok_msg_tty "swap partition & size detected"
 			parsed_info_has_swap='true'
 		fi
 	# Root partition check
 		if [[ -z "$disk_partitions_root_size" ]]; then
-			echo_error_msg "root partition & size didn't detected"
+			echo_error_msg_tty "root partition & size didn't detected"
 			to_exit='true'
 		else
-			echo_ok_msg "root partition & size detected"
+			echo_ok_msg_tty "root partition & size detected"
 		fi
 	# Home partition check
 		if [[ -z "$disk_partitions_home_size" ]]; then
-			echo_warning_msg "home partition & size didn't detected, '/home' will be a part of the root"
+			echo_warning_msg_tty "home partition & size didn't detected, '/home' will be a part of the root"
 			parsed_info_has_home='false'
 		else
-			echo_ok_msg "home partition & size detected"
+			echo_ok_msg_tty "home partition & size detected"
 			parsed_info_has_home='true'
 			if [[ -z "$disk_partitions_home_encrypted" ]]; then
-				echo_error_msg "home encryption didn't detected"
+				echo_error_msg_tty "home encryption didn't detected"
 				to_exit='true'
 			else
 				if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
-					echo_ok_msg "home encryption detected: $disk_partitions_home_encrypted"
+					echo_ok_msg_tty "home encryption detected: $disk_partitions_home_encrypted"
 					if [[ -z $disk_partitions_home_passphrase ]]; then
-						echo_error_msg "home passphrase didn't detected"
+						echo_error_msg_tty "home passphrase didn't detected"
 						to_exit='true'
 					else
-						echo_ok_msg "home passphrase detected"
+						echo_ok_msg_tty "home passphrase detected"
 					fi
 				else
-					echo_ok_msg "home encryption detected: $disk_partitions_home_encrypted"
+					echo_ok_msg_tty "home encryption detected: $disk_partitions_home_encrypted"
 				fi
 			fi
 		fi
 	else
-		echo_error_msg "auto-allocate disk didn't detected"
+		echo_error_msg_tty "auto-allocate disk didn't detected"
 		to_exit='true'
 	fi
 # To be installed check #
 	if [[ "$to_install_term_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "to install term utils detected: $to_install_term_utils"
+		echo_ok_msg_tty "to install term utils detected: $to_install_term_utils"
 	else
-		echo_warning_msg "to_install_term_utils didn't detected, will install term-utils"
+		echo_warning_msg_tty "to_install_term_utils didn't detected, will install term-utils"
 		to_install_term_utils='true'
 	fi
 	if [[ "$to_install_term_dev" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "to install term dev detected: $to_install_term_dev"
+		echo_ok_msg_tty "to install term dev detected: $to_install_term_dev"
 	else
-		echo_warning_msg "to_install_term_dev didn't detected, will install term-dev"
+		echo_warning_msg_tty "to_install_term_dev didn't detected, will install term-dev"
 		to_install_term_dev='true'
 	fi
 	if [[ "$to_install_desk_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "to install desk utils detected: $to_install_desk_utils"
+		echo_ok_msg_tty "to install desk utils detected: $to_install_desk_utils"
 	else
-		echo_warning_msg "to_install_desk_utils didn't detected, will install desk-utils"
+		echo_warning_msg_tty "to_install_desk_utils didn't detected, will install desk-utils"
 		to_install_desk_utils='true'
 	fi
 	if [[ "$to_install_desk_dev" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "to install desk dev detected: $to_install_desk_dev"
+		echo_ok_msg_tty "to install desk dev detected: $to_install_desk_dev"
 	else
-		echo_warning_msg "to_install_desk_dev didn't detected, will install desk-dev"
+		echo_warning_msg_tty "to_install_desk_dev didn't detected, will install desk-dev"
 		to_install_desk_dev='true'
 	fi
 	if [[ "$to_install_desk_creative" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "to install desk creative detected: $to_install_desk_creative"
+		echo_ok_msg_tty "to install desk creative detected: $to_install_desk_creative"
 	else
-		echo_warning_msg "to_install_desk_creative didn't detected, will install desk-creative"
+		echo_warning_msg_tty "to_install_desk_creative didn't detected, will install desk-creative"
 		to_install_desk_creative='true'
 	fi
 	if [[ "$to_install_desk_office" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "to install desk office detected: $to_install_desk_office"
+		echo_ok_msg_tty "to install desk office detected: $to_install_desk_office"
 	else
-		echo_warning_msg "to_install_desk_office didn't detected, will install desk-office"
+		echo_warning_msg_tty "to_install_desk_office didn't detected, will install desk-office"
 		to_install_desk_office='true'
 	fi
 # Advanced check #
 	if [[ "$advenced_kernel" =~ ^(linux|linux-lts)$ ]]; then
-		echo_ok_msg "kernel detected: $advenced_kernel"
+		echo_ok_msg_tty "kernel detected: $advenced_kernel"
 	else
-		echo_ok_msg "kernel didn't detected, will use linux"
+		echo_ok_msg_tty "kernel didn't detected, will use linux"
 		advenced_kernel='linux'
 	fi
 	if [[ "$advenced_copy_log_to_machine" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "copy log to machine detected: $advenced_copy_log_to_machine"
+		echo_ok_msg_tty "copy log to machine detected: $advenced_copy_log_to_machine"
 	else
-		echo_ok_msg "copy log to machine didn't detected, will copy log to machine"
+		echo_ok_msg_tty "copy log to machine didn't detected, will copy log to machine"
 		advenced_copy_log_to_machine='true'
 	fi
 	if [[ "$advenced_detect_and_install_vm_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg "detect and install vm utils detected: $advenced_detect_and_install_vm_utils"
+		echo_ok_msg_tty "detect and install vm utils detected: $advenced_detect_and_install_vm_utils"
 	else
-		echo_ok_msg "detect and install vm utils didn't detected, will detect and install vm utils"
+		echo_ok_msg_tty "detect and install vm utils didn't detected, will detect and install vm utils"
 		advenced_detect_and_install_vm_utils='true'
 	fi
 
@@ -384,6 +384,41 @@ local to_exit='false'
 	if [[ $to_exit == 'true' ]]; then
 		false
 	fi
+}
+
+generate_info_bash_file()
+{
+cat > $SCRIPT_DIR/setup.sh <<EOF
+system_hostname='$system_hostname'
+system_desktop_environment='$system_desktop_environment'
+root_user_password='$root_user_password'
+admin_user_name='$admin_user_name'
+admin_user_password='$admin_user_password'
+disk_auto_allocate='$disk_auto_allocate'
+disk_path='$disk_path'
+disk_partitions_boot_size='$disk_partitions_boot_size'
+disk_partitions_swap_size='$disk_partitions_swap_size'
+disk_partitions_root_size='$disk_partitions_root_size'
+disk_partitions_home_size='$disk_partitions_home_size'
+disk_partitions_home_encrypted='$disk_partitions_home_encrypted'
+disk_partitions_home_passphrase='$disk_partitions_home_passphrase'
+to_install_term_utils='$to_install_term_utils'
+to_install_term_dev='$to_install_term_dev'
+to_install_desk_utils='$to_install_desk_utils'
+to_install_desk_dev='$to_install_desk_dev'
+to_install_desk_creative='$to_install_desk_creative'
+to_install_desk_office='$to_install_desk_office'
+advenced_kernel='$advenced_kernel'
+advenced_copy_log_to_machine='$advenced_copy_log_to_machine'
+advenced_detect_and_install_vm_utils='$advenced_detect_and_install_vm_utils'
+parsed_info_has_swap='$parsed_info_has_swap'
+parsed_info_has_boot='$parsed_info_has_boot'
+parsed_info_has_home='$parsed_info_has_home'
+disk_partitions_boot_partition='$disk_partitions_boot_partition'
+disk_partitions_swap_partition='$disk_partitions_swap_partition'
+disk_partitions_root_partition='$disk_partitions_root_partition'
+disk_partitions_home_partition='$disk_partitions_home_partition'
+EOF
 }
 
 setup_mirrors_using_reflector ()

@@ -12,7 +12,9 @@ echo_msg "                         Enabling Essential Services"
 echo_msg "--------------------------------------------------------------------------------"
 
 systemctl enable NetworkManager.service
-systemctl enable lightdm.service
+if [[ "$system_desktop_environment" != 'server' ]]; then
+	systemctl enable lightdm.service
+fi
 
 # Remove no password sudo rights
 sed -i 's/^%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers

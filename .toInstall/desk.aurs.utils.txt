@@ -1,4 +1,4 @@
 # Progs
-brave
+brave-bin
 # Fonts
 nerd-fonts-hack

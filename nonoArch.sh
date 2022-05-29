@@ -26,36 +26,9 @@ echo_error_msg_tty "Note: this is what a error from this script looks like"
 echo
 
 echo_msg_tty "Info loading (info from 'setup.yml') [This occures before the different scripts runs]"
-parse_info &> /dev/null
-cat > $SCRIPT_DIR/setup.sh <<EOF
-system_hostname="$system_hostname"
-system_desktop_environment="$system_desktop_environment"
-root_user_password="$root_user_password"
-admin_user_name="$admin_user_name"
-admin_user_password="$admin_user_password"
-disk_auto_allocate="$disk_auto_allocate"
-disk_path="$disk_path"
-disk_partitions_boot_size="$disk_partitions_boot_size"
-disk_partitions_swap_size="$disk_partitions_swap_size"
-disk_partitions_root_size="$disk_partitions_root_size"
-disk_partitions_home_size="$disk_partitions_home_size"
-disk_partitions_home_encrypted="$disk_partitions_home_encrypted"
-disk_partitions_home_passphrase="$disk_partitions_home_passphrase"
-to_install_term_utils="$to_install_term_utils"
-to_install_term_dev="$to_install_term_dev"
-to_install_desk_utils="$to_install_desk_utils"
-to_install_desk_dev="$to_install_desk_dev"
-to_install_desk_creative="$to_install_desk_creative"
-to_install_desk_office="$to_install_desk_office"
-advenced_kernel="$advenced_kernel"
-advenced_copy_log_to_machine="$advenced_copy_log_to_machine"
-advenced_detect_and_install_vm_utils="$advenced_detect_and_install_vm_utils"
-parsed_info_has_swap=$parsed_info_has_swap
-parsed_info_has_boot=$parsed_info_has_boot
-parsed_info_has_home=$parsed_info_has_home
-OUTPUTFILE=${OUTPUTFILE@Q}
-EOF
-
+parse_info
+# write the info into a setup.sh file for the different scripts to use
+generate_info_bash_file
 echo
 wait_for_any_key_press "If you are ready, press [any key] to start.. "
 echo_msg_tty "The installation will start now, please be patient"
@@ -106,19 +79,18 @@ $(cat $SCRIPT_DIR/.scripts/post-live-env.sh)
 EOF
 
 if [[ "$advenced_copy_log_to_machine" == 'true' ]]; then
-	mkdir -p /mnt/nonoArch.logs/
+	mkdir -p /mnt/root/nonoArch.logs/
 	cp -r $SCRIPT_DIR/logs/* /mnt/root/nonoArch.logs/
 	cp $SCRIPT_DIR/setup.sh /mnt/root/nonoArch.logs/
 fi
 
-echo
 echo_msg_tty "--------------------------------------------------------------------------------"
 echo_msg_tty "                            Installation finished"
 echo_msg_tty "                 Please eject the installation media and reboot"
 if [[ "$advenced_copy_log_to_machine" == 'true' ]]; then
-	echo_msg_tty "            Logs are available at /root/nonoArch.logs on the new system"
-	echo_msg_tty "                   and also in $SCRIPT_DIR/logs"
+	echo_msg_tty "         Logs are available at /root/nonoArch.logs on the new system"
+	echo_msg_tty "            and also in $SCRIPT_DIR/logs on the live system"
 else
-	echo_msg_tty "                 Logs are available in $SCRIPT_DIR/logs"
+	echo_msg_tty "         Logs are available in $SCRIPT_DIR/logs on the live system"
 fi
 echo_msg_tty "--------------------------------------------------------------------------------"
