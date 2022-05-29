@@ -4,10 +4,6 @@
 # @note all the setup variables are defined and the library is available
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                     Setup the environment for the installation"
-echo_msg "--------------------------------------------------------------------------------"
-
-echo_msg "--------------------------------------------------------------------------------"
 echo_msg "          Setup mirrors, keys and parallel download for downloading packages"
 echo_msg "--------------------------------------------------------------------------------"
 

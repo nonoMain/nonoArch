@@ -5,10 +5,11 @@
 
 ##------------------------don't touch----------------------##
 
+# paru
 aur_helper_url='https://aur.archlinux.org/paru.git'
 aur_helper_name='paru'
 
-download_aurs_from_file ()
+install_aurs_from_file ()
 {
 	local file_name="$1"
 	local title=""
@@ -20,10 +21,10 @@ download_aurs_from_file ()
 		else
 			printf "[ ${MSG_COLOR}MSG${NC} ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line" > /dev/tty
 			printf "[ MSG ] Installing F:%-30s %-25s P:%-25s\n" "$(basename $file_name)" "$title" "$line"
-			$aur_helper_name -S --noconfirm --needed ${line} && installed=true || installed=false
+			( $aur_helper_name -S --noconfirm --needed ${line} ) && installed=true || installed=false
 			if [ $installed == false ]; then
-				echo_warning_msg "Failed to download package: $line, retrying..."
-				$aur_helper_name -S --noconfirm --needed ${line} && installed=true || installed=false
+				echo_warning_msg "Failed to install package: $line, retrying..."
+				( $aur_helper_name -S --noconfirm --needed ${line} ) && installed=true || installed=false
 				if [ $installed == true ]; then
 					echo_ok_msg "Successfully installed package: $line, on retry"
 				else
@@ -36,9 +37,9 @@ download_aurs_from_file ()
 
 ##--------------------------code---------------------------##
 
-# toggle langs using Super(WinKey) + space (set to english 'us' and hebrew 'il')
 
 if [[ "$(curl -s https://ifconfig.co/country-iso)" == 'IL' ]]; then
+# toggle langs using Super(WinKey) + space (set to english 'us' and hebrew 'il')
 cat > ~/.profile << EOF
 echo "# toggle langs using alt+shift (set to english 'us' and hebrew 'il')"
 echo "setxkbmap -option grp:win_space_toggle us,il"
@@ -57,18 +58,22 @@ cd $aur_helper_name
 makepkg -si --noconfirm
 cd ../..
 rm -rf $TMPDIR
-$aur_helper_name
+
+
+echo_msg "--------------------------------------------------------------------------------"
+echo_msg "                             Installing pip packages"
+echo_msg "--------------------------------------------------------------------------------"
+
+[[ "$to_install_term_dev" == 'true' ]] && ( pip install neovim || echo_error_msg "Failed to install neovim" )
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                             Installing Aur packages"
 echo_msg "--------------------------------------------------------------------------------"
 
-
-download_aurs_from_file "$HOME/.toInstall/term.aurs.dev.txt"
+install_aurs_from_file "$HOME/.toInstall/term.aurs.dev.txt"
 if [[ "$system_desktop_environment" != 'server' ]]; then
-	download_aurs_from_file "$HOME/.toInstall/desk.aurs.must.txt"
-	[[ "$to_install_desk_dev" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.aurs.dev.txt"
-	pip install neovim || echo_error_msg "Failed to install neovim"
-	[[ "$to_install_desk_utils" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.aurs.utils.txt"
-	[[ "$to_install_desk_office" == 'true' ]] && download_aurs_from_file "$HOME/.toInstall/desk.aurs.office.txt"
+	install_aurs_from_file "$HOME/.toInstall/desk.aurs.must.txt"
+	[[ "$to_install_desk_utils" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.utils.txt" || echo_warning_msg "Skipping desk.aurs.utils.txt" )
+	[[ "$to_install_desk_dev" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.dev.txt" || echo_warning_msg "Skipping desk.aurs.dev.txt" )
+	[[ "$to_install_desk_office" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.office.txt" || echo_warning_msg "Skipping desk.aurs.office.txt" )
 fi

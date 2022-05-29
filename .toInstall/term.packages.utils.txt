@@ -12,6 +12,7 @@ bash-completion
 htop
 btop
 lsd
+stow
 neofetch
 lsb-release
 # Tools
@@ -20,6 +21,8 @@ net-tools
 npm
 ninja
 flatpak
+# Editors
+nano
 neovim
 # Other file systems
 dosfstools

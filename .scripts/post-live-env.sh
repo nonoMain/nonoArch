@@ -4,10 +4,6 @@
 # @note all the setup variables are defined and the library is available
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                 Post setup the environment for the installation"
-echo_msg "--------------------------------------------------------------------------------"
-
-echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                           Enabling Essential Services"
 echo_msg "--------------------------------------------------------------------------------"
 

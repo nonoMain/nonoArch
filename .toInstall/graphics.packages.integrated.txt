@@ -1,0 +1,5 @@
+libva-intel-driver
+libvdpau-va-gl
+lib32-vulkan-intel
+vulkan-intel
+libva-utils

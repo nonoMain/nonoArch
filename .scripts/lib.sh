@@ -164,222 +164,307 @@ parse_yaml ()
    }'
 }
 
+parsed_check_system ()
+{
+	if [[ -z "$system_hostname" ]]; then
+		echo_error_msg_tty "Hostname didn't detected"
+		to_exit='true'
+	else
+		echo_ok_msg_tty "Hostname: $system_hostname"
+	fi
+	if [[ -z "$system_desktop_environment" ]]; then
+		echo_error_msg_tty "Desktop environment didn't detected"
+		to_exit='true'
+	elif [[ "$system_desktop_environment" =~ ^(kde|gnome|xfce)$ ]]; then
+		echo_ok_msg_tty "Desktop environment: $system_desktop_environment"
+	elif [[ "$system_desktop_environment" =~ ^server$ ]]; then
+		echo_ok_msg_tty "It's a server, no desktop packages/aurs will be installed"
+	else
+		echo_error_msg_tty "Desktop environment detected but not supported or invalid"
+		to_exit='true'
+	fi
+}
+parsed_check_root ()
+{
+	if [[ -z $root_user_password ]]; then
+		echo_error_msg_tty "Root user password didn't detected"
+		to_exit='true'
+	fi
+}
+parsed_check_admin ()
+{
+	if [[ -z $admin_user_name ]]; then
+		echo_error_msg_tty "Admin username didn't detected"
+		to_exit='true'
+	elif [[ !( "$admin_user_name" =~ ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ) ]]; then
+		echo_error_msg_tty "Admin username isn't valid (only lowercase, numbers, '-' and '_' are allowed)"
+		to_exit='true'
+	fi
+	if [[ -z $admin_user_password ]]; then
+		echo_error_msg_tty "Admin user password didn't detected"
+		to_exit='true'
+	fi
+}
+parsed_check_disk ()
+{
+	if [[ -z $disk_path ]]; then
+		echo_error_msg_tty "Disk path didn't detected"
+		to_exit='true'
+	else
+		echo_ok_msg_tty "Disk path: $disk_path"
+	fi
+	if [[ -z $disk_auto_allocate ]]; then
+		echo_error_msg_tty "Disk auto allocate didn't detected"
+		to_exit='true'
+	elif [[ "$disk_auto_allocate" =~ ^(true|false)$ ]]; then
+		echo_ok_msg_tty "Disk auto allocate: $disk_auto_allocate"
+		if [[ "$disk_auto_allocate" == 'true' ]]; then
+			echo_warning_msg_tty "Auto allocate will take over all of the disk, make sure that $disk_path is empty or unimportant"
+			# Boot partition check [optional partion]
+			if [[ -z $disk_partitions_boot_size ]]; then
+				echo_warning_msg_tty "Disk partitions boot size didn't detected, make sure you have a way to boot your system"
+				parsed_info_has_boot='false'
+			else
+				echo_ok_msg_tty "Disk partitions boot size: $disk_partitions_boot_size"
+				parsed_info_has_boot='true'
+			fi
+			# Swap partition check [optional partion]
+			if [[ -z $disk_partitions_swap_size ]]; then
+				echo_warning_msg_tty "Disk partitions swap size didn't detected, the system won't have swap"
+				parsed_info_has_swap='false'
+			else
+				echo_ok_msg_tty "Disk partitions swap size: $disk_partitions_swap_size"
+				parsed_info_has_swap='true'
+			fi
+			# Root partition check [required partion]
+			if [[ -z $disk_partitions_root_size ]]; then
+				echo_error_msg_tty "Disk partitions root size didn't detected"
+				to_exit='true'
+			else
+				echo_ok_msg_tty "Disk partitions root size: $disk_partitions_root_size"
+			fi
+			# Home partition check [optional partion]
+			if [[ -z $disk_partitions_home_size ]]; then
+				echo_warning_msg_tty "Disk partitions home size didn't detected, the system won't have home partition"
+				parsed_info_has_home='false'
+			else
+				echo_ok_msg_tty "Disk partitions home size: $disk_partitions_home_size"
+				parsed_info_has_home='true'
+			fi
+		else # Auto allocate == true
+			# Boot partition check [optional partion]
+			if [[ -z $disk_partitions_boot_partition ]]; then
+				echo_warning_msg_tty "Disk partitions boot partition didn't detected, make sure you have a way to boot your system"
+				parsed_info_has_boot='false'
+			else
+				# Check if the boot partition exists
+				if [[ -e "$disk_partitions_boot_partition"  ]] && [[ ! -z $(lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_boot_partition" )") ]]; then
+					echo_ok_msg_tty "Disk partitions boot partition: $disk_partitions_boot_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_boot_partition" )" | awk '{print $2}' )] (exists)"
+					parsed_info_has_boot='true'
+				else
+					echo_error_msg_tty "Disk partitions boot partition: $disk_partitions_boot_partition doesn't exist"
+					to_exit='true'
+				fi
+			fi
+			# Swap partition check [optional partion]
+			if [[ -z $disk_partitions_swap_partition ]]; then
+				echo_warning_msg_tty "Disk partitions swap partition didn't detected, the system won't have swap"
+				parsed_info_has_swap='false'
+			else
+				# Check if the swap partition exists
+				if [[ -e "$disk_partitions_swap_partition"  ]] && [[ ! -z $(lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_swap_partition" )") ]]; then
+					echo_ok_msg_tty "Disk partitions swap partition: $disk_partitions_swap_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_swap_partition" )" | awk '{print $2}' )] (exists)"
+					parsed_info_has_swap='true'
+				else
+					echo_error_msg_tty "Disk partitions swap partition: $disk_partitions_swap_partition doesn't exist"
+					to_exit='true'
+				fi
+			fi
+			# Root partition check [required partion]
+			if [[ -z $disk_partitions_root_partition ]]; then
+				echo_error_msg_tty "Disk partitions root partition didn't detected"
+				to_exit='true'
+			else
+				# Check if the root partition exists
+				if [[ -e "$disk_partitions_root_partition"  ]] && [[ ! -z $(lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_root_partition" )") ]]; then
+					echo_ok_msg_tty "Disk partitions root partition: $disk_partitions_root_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_root_partition" )" | awk '{print $2}' )] (exists)"
+				else
+					echo_error_msg_tty "Disk partitions root partition: $disk_partitions_root_partition doesn't exist"
+					to_exit='true'
+				fi
+			fi
+			# Home partition check [optional partion]
+			if [[ -z $disk_partitions_home_partition ]]; then
+				echo_warning_msg_tty "Disk partitions home partition didn't detected, the system won't have home partition"
+				parsed_info_has_home='false'
+			else
+				# Check if the home partition exists
+				if [[ -e "$disk_partitions_home_partition"  ]] && [[ ! -z $(lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_home_partition" )") ]]; then
+					echo_ok_msg_tty "Disk partitions home partition: $disk_partitions_home_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_home_partition" )" | awk '{print $2}' )] (exists)"
+					parsed_info_has_home='true'
+				else
+					echo_error_msg_tty "Disk partitions home partition: $disk_partitions_home_partition doesn't exist"
+					to_exit='true'
+				fi
+			fi
+		fi
+		if [[ "$parsed_info_has_home" == 'true' ]]; then
+			if [[ -z $disk_partitions_home_encrypted ]]; then
+				disk_partitions_home_encrypted='false'
+				echo_ok_msg_tty "Disk partitions home encrypted: $disk_partitions_home_encrypted [D]"
+			elif [[ "$disk_partitions_home_encrypted" =~ ^(true|false)$ ]]; then
+				echo_ok_msg_tty "Disk partitions home encrypted: $disk_partitions_home_encrypted [S]"
+				if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
+					if [[ -z $disk_partitions_home_passphrase ]]; then
+						echo_error_msg_tty "Disk partitions home passphrase didn't detected"
+						to_exit='true'
+					fi
+				fi
+			else
+				echo_error_msg_tty "Disk partitions home encrypted detected but invalid (only true or false allowed)"
+				to_exit='true'
+			fi
+		fi
+	else
+		echo_error_msg_tty "Disk auto allocate detected but invalid (only 'true' or 'false' are allowed)"
+		to_exit='true'
+	fi
+}
+parsed_check_to_install ()
+{
+	local term_install_kinds="must [M]"
+	local desk_install_kinds="must [M]"
+	# term utils
+	if [[ -z $to_install_term_utils ]]; then # default value
+		term_install_kinds="$term_install_kinds, utils [D]"
+	else # specified value
+		if [[ "$to_install_term_utils" =~ ^(true|false)$ ]]; then
+			if [[ "$to_install_term_utils" == 'true' ]]; then
+				term_install_kinds="$term_install_kinds, utils [S]"
+			fi
+		else
+			echo_error_msg_tty "To install term utils detected but invalid (only 'true' or 'false' are allowed)"
+			to_exit='true'
+		fi
+	fi
+	# term dev
+	if [[ -z $to_install_term_dev ]]; then # default value
+		term_install_kinds="$term_install_kinds, dev [D]"
+	else # specified value
+		if [[ "$to_install_term_dev" =~ ^(true|false)$ ]]; then
+			if [[ "$to_install_term_dev" == 'true' ]]; then
+				term_install_kinds="$term_install_kinds, dev [S]"
+			fi
+		else
+			echo_error_msg_tty "To install term dev detected but invalid (only 'true' or 'false' are allowed)"
+			to_exit='true'
+		fi
+	fi
+	# desk utils
+	if [[ -z $to_install_desk_utils ]]; then # default value
+		desk_install_kinds="$desk_install_kinds, utils [D]"
+	else # specified value
+		if [[ "$to_install_desk_utils" =~ ^(true|false)$ ]]; then
+			if [[ "$to_install_desk_utils" == 'true' ]]; then
+				desk_install_kinds="$desk_install_kinds, utils [S]"
+			fi
+		else
+			echo_error_msg_tty "To install desk utils detected but invalid (only 'true' or 'false' are allowed)"
+			to_exit='true'
+		fi
+	fi
+	# desk dev
+	if [[ -z $to_install_desk_dev ]]; then # default value
+		desk_install_kinds="$desk_install_kinds, dev [D]"
+	else # specified value
+		if [[ "$to_install_desk_dev" =~ ^(true|false)$ ]]; then
+			if [[ "$to_install_desk_dev" == 'true' ]]; then
+				desk_install_kinds="$desk_install_kinds, dev [S]"
+			fi
+		else
+			echo_error_msg_tty "To install desk dev detected but invalid (only 'true' or 'false' are allowed)"
+			to_exit='true'
+		fi
+	fi
+	# desk creative
+	if [[ -z $to_install_desk_creative ]]; then # default value
+		desk_install_kinds="$desk_install_kinds, creative [D]"
+	else # specified value
+		if [[ "$to_install_desk_creative" =~ ^(true|false)$ ]]; then
+			if [[ "$to_install_desk_creative" == 'true' ]]; then
+				desk_install_kinds="$desk_install_kinds, creative [S]"
+			fi
+		else
+			echo_error_msg_tty "To install desk creative detected but invalid (only 'true' or 'false' are allowed)"
+			to_exit='true'
+		fi
+	fi
+	# desk office
+	if [[ -z $to_install_desk_office ]]; then # default value
+		desk_install_kinds="$desk_install_kinds, office [D]"
+	else # specified value
+		if [[ "$to_install_desk_office" =~ ^(true|false)$ ]]; then
+			if [[ "$to_install_desk_office" == 'true' ]]; then
+				desk_install_kinds="$desk_install_kinds, office [S]"
+			fi
+		else
+			echo_error_msg_tty "To install desk office detected but invalid (only 'true' or 'false' are allowed)"
+			to_exit='true'
+		fi
+	fi
+	echo_ok_msg_tty "Terminal packages to install: $term_install_kinds"
+	echo_ok_msg_tty "Desktop packages to install: $desk_install_kinds"
+}
+parsed_check_advenced ()
+{
+	# advenced kernel
+	if [[ -z $advenced_kernel ]]; then
+		advenced_kernel='linux'
+		echo_ok_msg_tty "kernel: $advenced_kernel [D]"
+	elif [[ "$advenced_kernel" =~ ^(linux|linux-lts)$ ]]; then
+		echo_ok_msg_tty "kernel: $advenced_kernel [S]"
+	else
+		echo_error_msg_tty "Advenced kernel detected but invalid (only 'linux' or 'linux-lts' are allowed)"
+		to_exit='true'
+	fi
+	# advenced copy log to machine
+	if [[ -z $advenced_copy_log_to_machine ]]; then
+		advenced_copy_log_to_machine='true'
+		echo_ok_msg_tty "Copy log to machine: $advenced_copy_log_to_machine [D]"
+	elif [[ "$advenced_copy_log_to_machine" =~ ^(true|false)$ ]]; then
+		echo_ok_msg_tty "Copy log to machine: $advenced_copy_log_to_machine [S]"
+	else
+		echo_error_msg_tty "Advenced copy log to machine detected but invalid (only 'true' or 'false' are allowed)"
+		to_exit='true'
+	fi
+	# advenced detect and install vm utils
+	if [[ -z $advenced_detect_and_install_vm_utils ]]; then
+		advenced_detect_and_install_vm_utils='true'
+		echo_ok_msg_tty "Detect and install vm utils: $advenced_detect_and_install_vm_utils [D]"
+	elif [[ "$advenced_detect_and_install_vm_utils" =~ ^(true|false)$ ]]; then
+		echo_ok_msg_tty "Detect and install vm utils: $advenced_detect_and_install_vm_utils [S]"
+	else
+		echo_error_msg_tty "Advenced detect and install vm utils detected but invalid (only 'true' or 'false' are allowed)"
+		to_exit='true'
+	fi
+}
 parse_info ()
 {
-eval $( parse_yaml $SCRIPT_DIR/setup.yml )
-local to_exit='false'
-# System hostname check
-	if [[ -z "$system_hostname" ]]; then
-		echo_error_msg_tty "system hostname didn't detected"
-		to_exit='true'
-	else
-		echo_ok_msg_tty "system hostname detected"
-	fi
-# System desktop environment check
-	if [[ -z "$system_desktop_environment" ]]; then
-		echo_error_msg_tty "system desktop environment didn't detected"
-		to_exit='true'
-	elif [[ $system_desktop_environment =~ ^(kde|gnome|xfce|server)$ ]]; then
-		echo_ok_msg_tty "system desktop environment detected and valid"
-	else
-		echo_error_msg_tty "system desktop environment detected but not valid"
-		to_exit='true'
-	fi
-# Root password check
-	if [[ -z $root_user_password ]]; then
-		echo_error_msg_tty "root user password didn't detected"
-		to_exit='true'
-	else
-		echo_ok_msg_tty "root user password detected"
-		#root_user_password=$(sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/' <<< $root_user_password)
-	fi
-# Admin name check
-	if [[ -z "$admin_user_name" ]]; then
-		echo_error_msg_tty "admin username didn't detected"
-		to_exit='true'
-	else
-		echo_ok_msg_tty "admin username detected"
-		if [[ !( "$admin_user_name" =~ ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ) ]]; then
-			echo_error_msg_tty "admin username isn't valid (only lowercase, numbers, '-' and '_' are allowed)"
-			to_exit='true'
-		else
-			echo_ok_msg_tty "admin username is valid"
-		fi
-	fi
-# Admin password check
-	if [[ -z "$admin_user_password" ]]; then
-		echo_error_msg_tty "admin user password didn't detected"
-		to_exit='true'
-	else
-		echo_ok_msg_tty "admin user password detected"
-		#admin_user_password=$(sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/' <<< $admin_user_password)
-	fi
-	if [[ -z $disk_path ]]; then
-		echo_error_msg_tty "disk path didn't detected"
-		to_exit='true'
-	else
-		echo_ok_msg_tty "disk path detected"
-	fi
-# Partitions check (boot, swap, root, home) #
-	if [[ "$disk_auto_allocate" == 'false' ]]; then
-	# Boot partition check
-		if [[ -z "$disk_partitions_boot_partition" ]]; then
-			echo_warning_msg_tty "boot partition didn't detected, make sure you have a way to boot your system"
-			parsed_info_has_boot='false'
-		else
-			echo_ok_msg_tty "boot partition detected"
-			parsed_info_has_boot='true'
-		fi
-	# Swap partition check
-		if [[ -z "$disk_partitions_swap_partition" ]]; then
-			echo_warning_msg_tty "swap partition didn't detected, the system won't have swap"
-			parsed_info_has_swap='false'
-		else
-			echo_ok_msg_tty "swap partition detected"
-			parsed_info_has_swap='true'
-		fi
-	# Root partition check
-		if [[ -z "$disk_partitions_root_partition" ]]; then
-			echo_error_msg_tty "root partition didn't detected"
-			to_exit='true'
-		else
-			echo_ok_msg_tty "root partition detected"
-		fi
-	# Home partition check
-		if [[ -z "$disk_partitions_home_partition" ]]; then
-			echo_warning_msg_tty "home partition didn't detected, '/home' will be a part of the root"
-			parsed_info_has_home='false'
-		else
-			echo_ok_msg_tty "home partition detected"
-			parsed_info_has_home='true'
-			if [[ -z "$disk_partitions_home_encrypted" ]]; then
-				echo_error_msg_tty "home encryption didn't detected"
-				to_exit='true'
-			else
-				if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
-					echo_ok_msg_tty "home encryption detected, will encrypt home partition"
-					if [[ -z "$disk_partitions_home_passphrase" ]]; then
-						echo_error_msg_tty "home passphrase didn't detected"
-						to_exit='true'
-					else
-						echo_ok_msg_tty "home passphrase detected"
-					fi
-				else
-					echo_ok_msg_tty "home encryption detected, will not encrypt home partition"
-				fi
-			fi
-		fi
-	elif [[ "$disk_auto_allocate" == 'true' ]]; then
-		echo_ok_msg_tty "auto-allocate disk detected"
-		echo_warning_msg_tty "auto allocate will take over all of the disk, make sure that $disk_path is empty or unimportant"
-	# Boot partition check
-		if [[ -z "$disk_partitions_boot_size" ]]; then
-			echo_warning_msg_tty "boot partition & size didn't detected, make sure you have a way to boot your system"
-			parsed_info_has_boot='false'
-		else
-			echo_ok_msg_tty "boot partition & size detected"
-			parsed_info_has_boot='true'
-		fi
-	# Swap partition check
-		if [[ -z "$disk_partitions_swap_size" ]]; then
-			echo_warning_msg_tty "swap partition & size didn't detected, the system won't have swap"
-			parsed_info_has_swap='false'
-		else
-			echo_ok_msg_tty "swap partition & size detected"
-			parsed_info_has_swap='true'
-		fi
-	# Root partition check
-		if [[ -z "$disk_partitions_root_size" ]]; then
-			echo_error_msg_tty "root partition & size didn't detected"
-			to_exit='true'
-		else
-			echo_ok_msg_tty "root partition & size detected"
-		fi
-	# Home partition check
-		if [[ -z "$disk_partitions_home_size" ]]; then
-			echo_warning_msg_tty "home partition & size didn't detected, '/home' will be a part of the root"
-			parsed_info_has_home='false'
-		else
-			echo_ok_msg_tty "home partition & size detected"
-			parsed_info_has_home='true'
-			if [[ -z "$disk_partitions_home_encrypted" ]]; then
-				echo_error_msg_tty "home encryption didn't detected"
-				to_exit='true'
-			else
-				if [[ "$disk_partitions_home_encrypted" == 'true' ]]; then
-					echo_ok_msg_tty "home encryption detected: $disk_partitions_home_encrypted"
-					if [[ -z $disk_partitions_home_passphrase ]]; then
-						echo_error_msg_tty "home passphrase didn't detected"
-						to_exit='true'
-					else
-						echo_ok_msg_tty "home passphrase detected"
-					fi
-				else
-					echo_ok_msg_tty "home encryption detected: $disk_partitions_home_encrypted"
-				fi
-			fi
-		fi
-	else
-		echo_error_msg_tty "auto-allocate disk didn't detected"
-		to_exit='true'
-	fi
-# To be installed check #
-	if [[ "$to_install_term_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "to install term utils detected: $to_install_term_utils"
-	else
-		echo_warning_msg_tty "to_install_term_utils didn't detected, will install term-utils"
-		to_install_term_utils='true'
-	fi
-	if [[ "$to_install_term_dev" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "to install term dev detected: $to_install_term_dev"
-	else
-		echo_warning_msg_tty "to_install_term_dev didn't detected, will install term-dev"
-		to_install_term_dev='true'
-	fi
-	if [[ "$to_install_desk_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "to install desk utils detected: $to_install_desk_utils"
-	else
-		echo_warning_msg_tty "to_install_desk_utils didn't detected, will install desk-utils"
-		to_install_desk_utils='true'
-	fi
-	if [[ "$to_install_desk_dev" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "to install desk dev detected: $to_install_desk_dev"
-	else
-		echo_warning_msg_tty "to_install_desk_dev didn't detected, will install desk-dev"
-		to_install_desk_dev='true'
-	fi
-	if [[ "$to_install_desk_creative" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "to install desk creative detected: $to_install_desk_creative"
-	else
-		echo_warning_msg_tty "to_install_desk_creative didn't detected, will install desk-creative"
-		to_install_desk_creative='true'
-	fi
-	if [[ "$to_install_desk_office" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "to install desk office detected: $to_install_desk_office"
-	else
-		echo_warning_msg_tty "to_install_desk_office didn't detected, will install desk-office"
-		to_install_desk_office='true'
-	fi
-# Advanced check #
-	if [[ "$advenced_kernel" =~ ^(linux|linux-lts)$ ]]; then
-		echo_ok_msg_tty "kernel detected: $advenced_kernel"
-	else
-		echo_ok_msg_tty "kernel didn't detected, will use linux"
-		advenced_kernel='linux'
-	fi
-	if [[ "$advenced_copy_log_to_machine" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "copy log to machine detected: $advenced_copy_log_to_machine"
-	else
-		echo_ok_msg_tty "copy log to machine didn't detected, will copy log to machine"
-		advenced_copy_log_to_machine='true'
-	fi
-	if [[ "$advenced_detect_and_install_vm_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "detect and install vm utils detected: $advenced_detect_and_install_vm_utils"
-	else
-		echo_ok_msg_tty "detect and install vm utils didn't detected, will detect and install vm utils"
-		advenced_detect_and_install_vm_utils='true'
-	fi
+	eval $( parse_yaml $SCRIPT_DIR/setup.yml )
+	local to_exit='false'
+	echo_msg_tty "Signs: [M] - mandatory, [D] - default value, [S] -specified value"
 
+	# call the check functions
+	echo -e "[${MSG_COLOR}System info:${NC}]" > /dev/tty
+	parsed_check_system
+	parsed_check_root
+	parsed_check_admin
+	echo -e "[${MSG_COLOR}Disk info:${NC}]" > /dev/tty
+	parsed_check_disk
+	echo -e "[${MSG_COLOR}Install info:${NC}]" > /dev/tty
+	parsed_check_to_install
+	echo -e "[${MSG_COLOR}Advenced info:${NC}]" > /dev/tty
+	parsed_check_advenced
 
 	if [[ $to_exit == 'true' ]]; then
 		false

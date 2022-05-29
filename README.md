@@ -5,8 +5,11 @@ This is a set of scripts meant to install an Arch machine with ease
 </p>
 
 ## Todo:
-- check the user password expansion
-- add keeper config
+- add tests for disk and boolean answers
+- clear out the parser messages and show the unprivate values
+- add keeper configs
+- add readme credits
+- add more troubleshooting info
 
 ## The installation
 ### Create a live boot with the arch ISO

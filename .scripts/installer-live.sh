@@ -7,6 +7,23 @@
 
 kernel=$advenced_kernel
 
+pacstrap_package ()
+{
+	local package=$1; shift
+	printf "[ ${MSG_COLOR}MSG${NC} ] Pacstraping P:%s\n" "$package" > /dev/tty
+	printf "[ MSG ] Pacstraping P:%s\n" "$package"
+	( pacstrap /mnt "$package" ) && installed=true || installed=false
+	if [ $installed == false ]; then
+		echo_warning_msg "Failed to pacstrap package: $package, retrying..."
+		( pacstrap /mnt "$package" ) && installed=true || installed=false
+		if [ $installed == true ]; then
+			echo_ok_msg "Successfully installed package: $package, on retry"
+		else
+			echo_error_msg "Failed to install package: $package, on retry"
+		fi
+	fi
+}
+
 ##--------------------------code---------------------------##
 
 if [[ "$parsed_info_has_home" == 'true' ]]; then
@@ -63,7 +80,7 @@ echo_msg "----------------------------------------------------------------------
 
 mount $disk_partitions_root_partition /mnt
 if [[ "$parsed_info_has_boot" == 'true' ]]; then
-	mkdir -p /mnt/boot/
+	mkdir -p /mnt/boot/efi
 	mount $disk_partitions_boot_partition /mnt/boot/
 fi
 if [[ "$parsed_info_has_home" == 'true' ]]; then
@@ -94,9 +111,30 @@ case "$CPU_TYPE" in
 		;;
 esac
 
-pacstrap /mnt base base-devel $kernel $microcode linux-firmware \
- grub efibootmgr sudo \
- mtools os-prober dosfstools cryptsetup networkmanager
+pacstrap_package "base"
+pacstrap_package "base-devel"
+pacstrap_package "$kernel"
+pacstrap_package "$microcode"
+pacstrap_package "linux-firmware"
+pacstrap_package "grub"
+pacstrap_package "sudo"
+pacstrap_package "mtools"
+pacstrap_package "os-prober"
+pacstrap_package "dosfstools"
+pacstrap_package "cryptsetup"
+pacstrap_package "networkmanager"
+
+if [[ "$parsed_info_has_boot" == 'true' ]]; then
+	if [[ ! -d /sys/firmware/efi ]]; then
+		echo_msg "--------------------------------------------------------------------------------"
+		echo_msg "                            Installing BIOS bootloader"
+		echo_msg "--------------------------------------------------------------------------------"
+		pacman -S --noconfirm --needed grub
+		grub-install --boot-directory=/mnt/boot/ $disk_path
+	else
+		pacstrap_package "efibootmgr"
+	fi
+fi
 
 if [ "$parsed_info_has_home" == 'true' ] && [ "$disk_partitions_home_encrypted" == 'true' ]; then
 	echo_msg "--------------------------------------------------------------------------------"
@@ -108,27 +146,11 @@ if [ "$parsed_info_has_home" == 'true' ] && [ "$disk_partitions_home_encrypted" 
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                         Installs & configures graphics"
-echo_msg "--------------------------------------------------------------------------------"
-if lspci | grep -E "NVIDIA|GeForce"; then
-	echo_msg "Nvidia graphics"
-	pacstrap /mnt nvidia nvidia-settings
-	nvidia-xconfig
-elif lspci | grep -E "Radeon"; then
-	echo_msg "Radeon"
-	pacstrap /mnt xf86-video-amdgpu
-elif lspci | grep -E "Integrated Graphics Controller"; then
-	echo_msg "Integrated graphics"
-	pacstrap /mnt libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils
-fi
-
-echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                               Generating fstab"
 echo_msg "--------------------------------------------------------------------------------"
 
 genfstab -U /mnt
 genfstab -U /mnt >> /mnt/etc/fstab
-
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                         Setting hostname and hosts file"
