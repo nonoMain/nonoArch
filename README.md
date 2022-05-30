@@ -9,17 +9,17 @@ This is a set of scripts meant to install an Arch machine with ease
 - add readme credits
 - add more troubleshooting info
 
-## The installation
+## Installation
 ### Create a live boot with the arch ISO
 Download the [arch iso](https://archlinux.org/download/) and load it onto a USB stick (I recommend you use something like [Etcher](https://www.balena.io/etcher/))
 
 ### Pre-run steps
-1. find the path to the disk you want to install on / the paths to the partitions you have already
+1. find the path to the disk you want to install arch on or the paths to the partitions you already have
 > e.g: fdisk -l
 2. set the EDITOR environment variable to your favorite terminal editor
-> e.g: export EDITOR=vim
+> e.g: export EDITOR=vim (vim is default, nano is good for beginners)
 3. read the docs that at the beginning of the [setup file](./setup.yml)
-> there are multiple options other then the default so read them
+> there are multiple options other then the default so read all of it
 
 ### Boot into the live boot and run:
 ```bash
