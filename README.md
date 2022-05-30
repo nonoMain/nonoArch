@@ -5,8 +5,6 @@ This is a set of scripts meant to install an Arch machine with ease
 </p>
 
 ## Todo:
-- add tests for disk and boolean answers
-- clear out the parser messages and show the unprivate values
 - add keeper configs
 - add readme credits
 - add more troubleshooting info
@@ -88,7 +86,8 @@ The script that runs is [nonoArch.sh](./nonoArch.sh) and it executes the other s
 2. [partitioner.sh](./.scripts/partitioner.sh) - runs on the live environment as root (optional, if you want to fully partition a disk)
 3. [installer-live.sh](./.scripts/installer-live.sh) - runs on the live environment as root
 4. [installer-chroot.sh](./.scripts/installer-chroot.sh) - runs on the installed system as root
-5. [user.sh](./.scripts/user.sh) - runs on the installed system as admin user (optional, if you have a user)
+5. [user.sh](./.scripts/user.sh) - runs on the installed system as admin user
+6. [post-live-env.sh](./.scripts/post-live-env.sh) - runs on the live environment as root
 
 ## Credits
 the ASCII art is from [fsymbols](https://fsymbols.com/generators/carty/)
