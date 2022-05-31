@@ -77,3 +77,9 @@ if [[ "$system_desktop_environment" != 'server' ]]; then
 	[[ "$to_install_desk_dev" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.dev.txt" || echo_warning_msg "Skipping desk.aurs.dev.txt" )
 	[[ "$to_install_desk_office" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.office.txt" || echo_warning_msg "Skipping desk.aurs.office.txt" )
 fi
+if [[ "$system_desktop_environment" == 'kde' ]]; then
+	echo_msg "--------------------------------------------------------------------------------"
+	echo_msg "                            Installing KDE Aur packages"
+	echo_msg "--------------------------------------------------------------------------------"
+	( install_aurs_from_file "$HOME/.toInstall/desk.aurs.kde.txt" || echo_warning_msg "Skipping desk.aurs.kde.txt" )
+fi
