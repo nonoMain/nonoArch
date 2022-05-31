@@ -1,2 +1,9 @@
 # Themes
+# Login manager theme
 lightdm-webkit-theme-aether
+# Qt5 theme
+lightly-qt
+# GTK theme
+whitesur-gtk-theme
+# Icons
+papirus-icon-theme
