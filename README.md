@@ -45,8 +45,8 @@ $EDITOR ./setup.yml
 ### Install configurations
 The script will install an entire system with a login manager and a desktop environment
 with my favorite programs and tools which can all be edited and configured [here](./.toInstall/)
-Note: the script has the option to restore a pre archived configuration
-using [keeper](https://github.com/nonoMain/keeper)
+Note: in case you don't have your own dotfiles you can backup your configurations from your current machine using [keeper](https://github.com/nonoMain/keeper)
+and restore them after you installed your new machine (or in any other way you'd like of course, keeper is my biased recommendation)
 
 ## Troubleshooting
 ### Internet access
