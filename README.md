@@ -50,6 +50,7 @@ using [keeper](https://github.com/nonoMain/keeper)
 
 ## Troubleshooting
 ### Internet access
+
 ```bash
 # You can test if you have internet connection by running
 ping google.com
