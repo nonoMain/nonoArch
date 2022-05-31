@@ -12,13 +12,6 @@
 ##                       the desktop_environment (in this case the desktop packages will not be installed
 ##                       even if they are specified in the 'to_install' section)
 #
-## Admin user section ##
-## keeper_backup_to_restore - a link to a .zip/.tar.gz archive of a user configuration
-##                            made by or supported by keeper tool (github.com/nonoMain/keeper)
-##                            if left empty will not restore any user configuration
-##                            if 'default' will go to my own keepered archives if available for
-##                            the desktop_environment specified (or server if speicified)
-#
 ## Disk section ##
 ## auto_allocate - whether to use the script to fully partition a disk (erase all the disk's data)
 ## path - the path to the device you want to act on
@@ -91,7 +84,6 @@ root_user:
 admin_user:
   name: 'admin'
   password: '1234'
-  keeper_backup_to_restore: ''
 
 disk:
   auto_allocate: 'true'
