@@ -337,6 +337,7 @@ parsed_check_to_install ()
 	# term utils
 	if [[ -z $to_install_term_utils ]]; then # default value
 		term_install_kinds="$term_install_kinds, utils [D]"
+		to_install_term_utils='true'
 	else # specified value
 		if [[ "$to_install_term_utils" =~ ^(true|false)$ ]]; then
 			if [[ "$to_install_term_utils" == 'true' ]]; then
@@ -350,6 +351,7 @@ parsed_check_to_install ()
 	# term dev
 	if [[ -z $to_install_term_dev ]]; then # default value
 		term_install_kinds="$term_install_kinds, dev [D]"
+		to_install_term_dev='true'
 	else # specified value
 		if [[ "$to_install_term_dev" =~ ^(true|false)$ ]]; then
 			if [[ "$to_install_term_dev" == 'true' ]]; then
@@ -363,6 +365,7 @@ parsed_check_to_install ()
 	# desk utils
 	if [[ -z $to_install_desk_utils ]]; then # default value
 		desk_install_kinds="$desk_install_kinds, utils [D]"
+		to_install_desk_utils='true'
 	else # specified value
 		if [[ "$to_install_desk_utils" =~ ^(true|false)$ ]]; then
 			if [[ "$to_install_desk_utils" == 'true' ]]; then
@@ -376,6 +379,7 @@ parsed_check_to_install ()
 	# desk dev
 	if [[ -z $to_install_desk_dev ]]; then # default value
 		desk_install_kinds="$desk_install_kinds, dev [D]"
+		to_install_desk_dev='true'
 	else # specified value
 		if [[ "$to_install_desk_dev" =~ ^(true|false)$ ]]; then
 			if [[ "$to_install_desk_dev" == 'true' ]]; then
@@ -389,6 +393,7 @@ parsed_check_to_install ()
 	# desk creative
 	if [[ -z $to_install_desk_creative ]]; then # default value
 		desk_install_kinds="$desk_install_kinds, creative [D]"
+		to_install_desk_creative='true'
 	else # specified value
 		if [[ "$to_install_desk_creative" =~ ^(true|false)$ ]]; then
 			if [[ "$to_install_desk_creative" == 'true' ]]; then
@@ -402,6 +407,7 @@ parsed_check_to_install ()
 	# desk office
 	if [[ -z $to_install_desk_office ]]; then # default value
 		desk_install_kinds="$desk_install_kinds, office [D]"
+		to_install_desk_office='true'
 	else # specified value
 		if [[ "$to_install_desk_office" =~ ^(true|false)$ ]]; then
 			if [[ "$to_install_desk_office" == 'true' ]]; then

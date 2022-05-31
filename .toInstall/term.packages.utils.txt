@@ -43,5 +43,4 @@ bat
 # Fun
 cmatrix
 figlet
-fortune
 cowsay
