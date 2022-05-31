@@ -3,6 +3,8 @@
 wget
 curl
 tree
+grep
+ripgrep
 openssh
 make
 cmake
@@ -10,8 +12,6 @@ automake
 autoconf
 bash-completion
 htop
-btop
-lsd
 stow
 neofetch
 lsb-release
@@ -36,3 +36,12 @@ unzip
 zip
 gzip
 bzip2
+# 'New' tools
+lsd
+btop
+bat
+# Fun
+cmatrix
+figlet
+fortune
+cowsay

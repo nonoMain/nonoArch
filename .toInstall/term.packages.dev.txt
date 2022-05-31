@@ -4,6 +4,7 @@ neovim
 strace
 tldr
 lazygit
+fzf
 pandoc
 # Languages
 nasm

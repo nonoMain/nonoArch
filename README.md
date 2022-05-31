@@ -1,13 +1,8 @@
 # nonoArch.git - Arch install script
-This is a set of scripts meant to install an Arch machine with ease
+This is a set of bash scripts meant to install an Arch machine with ease
 <p align="center">
   <img src="https://img.shields.io/github/repo-size/nonomain/nonoArch?style=for-the-badge">
 </p>
-
-## Todo:
-- add keeper configs
-- add readme credits
-- add more troubleshooting info
 
 ## Installation
 ### Create a live boot with the arch ISO
@@ -47,25 +42,29 @@ $EDITOR ./setup.yml
 ./nonoArch.sh
 ```
 
-## installation configuration
-the script will install an entire system with a login manager and a desktop environment
+### Install configurations
+The script will install an entire system with a login manager and a desktop environment
 with my favorite programs and tools which can all be edited and configured [here](./.toInstall/)
 Note: the script has the option to restore a pre archived configuration
 using [keeper](https://github.com/nonoMain/keeper)
 
 ## Troubleshooting
 ### Internet access
-You need internet access in order to install a new system so make sure you have either Ethernet
-or Wifi
-#### No Wifi?
-
-You can check if the WiFi is blocked by running `rfkill list`.
-If it says **Soft blocked: yes**,
-then run `rfkill unblock wifi`
-
-After unblocking the WiFi, you can connect to it. Go through these 7 steps:
-
 ```bash
+# You can test if you have internet connection by running
+ping google.com
+```
+
+You need internet access in order to install a new system so make sure you have either Ethernet
+or wifi
+
+If Ethernet isn't an option you can connect to wifi (if your machine has that ability) . Go through these 7 steps:
+```bash
+# No WIFI?!?!
+# You can check if the wifi is blocked by running:
+rfkill list
+# If it says Soft blocked: yes then run
+rfkill unblock wifi
 # Enter into the network manager
 iwctl
 # find your device name
@@ -76,11 +75,24 @@ station [device name] get-networks
 station [device name] connect [network name]
 # enter your password and exit
 exit
-# You can test if you have internet connection by running
-ping google.com
 ```
 
-### Script crashed
+### Information sources
+1. [Arch wiki](https://wiki.archlinux.org/title/Installation_guide)
+2. [Nice install guide](https://github.com/rickellis/Arch-Linux-Install-Guide)
+
+### Redo the installation
+If the script crashed and the logs don't help you that much so I'd recommend to rerun the installation (not so time consuming)
+in order to rerun the script just run:
+```bash
+# You can see the disk you chose in the 'setup.yml' file
+sgdisk -Zo <path/to/the/disk>
+# reboot the live system (it will lose all the installation files)
+reboot
+# now just rerun the installation command that specified at the beginning of this README.md
+```
+
+### Scripts by order
 The script that runs is [nonoArch.sh](./nonoArch.sh) and it executes the other scripts in this order:
 1. [setup-live-env.sh](./.scripts/setup-live-env.sh) - runs on the live environment as root
 2. [partitioner.sh](./.scripts/partitioner.sh) - runs on the live environment as root (optional, if you want to fully partition a disk)
@@ -89,5 +101,18 @@ The script that runs is [nonoArch.sh](./nonoArch.sh) and it executes the other s
 5. [user.sh](./.scripts/user.sh) - runs on the installed system as admin user
 6. [post-live-env.sh](./.scripts/post-live-env.sh) - runs on the live environment as root
 
-## Credits
+## Notes
+This script is a reupload of an old Arch install script of mine.
+The script is installing arch in a way that I think is good and if you are not me this will very likely won't
+be well suited for you so I'd recommend looking at the way I did it and fork it to be just like you want it,
+I recommend building of my repository and not others simply because how light it is compared to other scripts that
+does the same stuff.
+
+### Credits
 the ASCII art is from [fsymbols](https://fsymbols.com/generators/carty/)
+the project that my first arch installer was based upon was [easy-arch](https://github.com/classy-giraffe/easy-arch)
+a project that I took nice design ideas (the bios grub support, the logs, the different desktop environments) from was [ArchTitus](https://github.com/ChrisTitusTech/ArchTitus)
+
+### Alternatives
+there are two ways you can look at it, if you want more minimal script that works great then defintley take a look at [easy-arch](https://github.com/classy-giraffe/easy-arch)
+if you were looking to somethings even more comfortable and easy then use [ArchTitus](https://github.com/ChrisTitusTech/ArchTitus)

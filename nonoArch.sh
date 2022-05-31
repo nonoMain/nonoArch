@@ -41,6 +41,7 @@ if [ "$worked" == "true" ]; then
 	echo_ok_msg_tty "The setup-live-env.sh script ran successfully"
 else
 	echo_error_msg_tty "The setup-live-env.sh script failed"
+	echo_warning_msg_tty "This is a fatal error, the installation will not continue"
 	echo_msg_tty "Please check the log file: $SCRIPT_DIR/logs/setup-live-env.log"
 	exit 1
 fi
@@ -51,6 +52,7 @@ if [ $disk_auto_allocate == 'true' ]; then
 		echo_ok_msg_tty "The partitioner script ran successfully"
 	else
 		echo_error_msg_tty "The partitioner script failed"
+		echo_warning_msg_tty "This is a fatal error, the installation will not continue"
 		echo_msg_tty "Please check the log file: $SCRIPT_DIR/logs/partitioner.log"
 		exit 1
 	fi
@@ -65,6 +67,7 @@ if [ "$worked" == "true" ]; then
 	echo_ok_msg_tty "The installer-live.sh script ran successfully"
 else
 	echo_error_msg_tty "The installer-live.sh script failed"
+	echo_warning_msg_tty "This is a fatal error, the installation will not continue"
 	echo_msg_tty "Please check the log file: $SCRIPT_DIR/logs/installer-live.log"
 	exit 1
 fi
@@ -82,6 +85,7 @@ if [ "$worked" == "true" ]; then
 	echo_ok_msg_tty "The installer-chroot.sh script ran successfully"
 else
 	echo_error_msg_tty "The installer-chroot.sh script failed"
+	echo_warning_msg_tty "This is a fatal error, the installation will not continue"
 	echo_msg_tty "Please check the log file: $SCRIPT_DIR/logs/installer-chroot.log"
 	exit 1
 fi
@@ -100,6 +104,7 @@ if [ "$worked" == "true" ]; then
 else
 	echo_error_msg_tty "The user.sh script failed"
 	echo_msg_tty "Please check the log file: $SCRIPT_DIR/logs/user.log"
+	echo_warning_msg_tty "This is not a fatal error, the installation will continue (if you want to)"
 	wait_for_any_key_press "Press [any key] to continue.. [or Ctrl+C to break]"
 fi
 
@@ -113,7 +118,7 @@ if [ "$worked" == "true" ]; then
 else
 	echo_error_msg_tty "The post-live-env.sh script failed"
 	echo_msg_tty "Please check the log file: $SCRIPT_DIR/logs/post-live-env.log"
-	wait_for_any_key_press "Press [any key] to continue.. [or Ctrl+C to break]"
+	echo_warning_msg_tty "This is a fatal error, the installation finished. I'd recommend to run the post-live-env.sh script manually"
 fi
 
 if [[ "$advenced_copy_log_to_machine" == 'true' ]]; then

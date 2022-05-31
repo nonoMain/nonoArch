@@ -18,3 +18,5 @@ lightdm-webkit2-greeter
 pulseaudio
 pulseaudio-alsa
 pulseaudio-bluetooth
+# Dependencies libs
+libnotify
