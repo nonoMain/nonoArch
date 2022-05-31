@@ -25,7 +25,7 @@ Note: the above script is in [here](./.howto.sh)
 and can be replaced by:
 ```bash
 # make sure you have the needed tools installed
-pacman -Sy --noconfirm --needed curl unzip $EDITOR
+pacman -Sy --noconfirm --needed curl unzip
 
 # shortend link (full link is https://github.com/nonoMain/nonoArch/archive/master.zip)
 curl -sL 'bit.ly/nonoArchMasterZip' -o nonoArch.master.zip
