@@ -1,8 +1,10 @@
 # KDE themes
+# Global theme
+orchis-kde-theme-git
 # Qt5 theme
-lightly-qt
+lightly-git
 # GTK theme
-whitesur-gtk-theme-git
+orchis-theme-git
 # Icons
 papirus-icon-theme
 # Window tiling
