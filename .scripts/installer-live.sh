@@ -10,8 +10,8 @@ kernel=$advenced_kernel
 pacstrap_package ()
 {
 	local package=$1; shift
-	printf "[ ${MSG_COLOR}MSG${NC} ] Pacstraping P:%s\n" "$package" > /dev/tty
-	printf "[ MSG ] Pacstraping P:%s\n" "$package"
+	printf "[ ${MSG_COLOR}MSG${NC} ] Pacstrapping P:%s\n" "$package" > /dev/tty
+	printf "[ MSG ] Pacstrapping P:%s\n" "$package"
 	( pacstrap /mnt "$package" ) && installed=true || installed=false
 	if [ $installed == false ]; then
 		echo_warning_msg "Failed to pacstrap package: $package, retrying..."
@@ -97,7 +97,7 @@ if ! grep -qs '/mnt' /proc/mounts; then
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                             Installing base system"
+echo_msg "                             Pacstrapping base system"
 echo_msg "--------------------------------------------------------------------------------"
 CPU_TYPE=$(grep vendor_id /proc/cpuinfo)
 case "$CPU_TYPE" in
