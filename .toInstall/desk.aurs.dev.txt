@@ -1,2 +1,3 @@
 # Tools
 ida-free
+etcher-bin

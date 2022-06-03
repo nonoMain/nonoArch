@@ -3,9 +3,14 @@
 orchis-kde-theme-git
 # Qt5 theme
 lightly-git
+lightlyshaders-git
 # GTK theme
 orchis-theme-git
 # Icons
 papirus-icon-theme
 # Window tiling
 kwin-bismuth
+# Useful
+plasma5-applets-virtual-desktop-bar-git
+plasma5-applets-window-title
+plasma5-applets-simplemenu-git

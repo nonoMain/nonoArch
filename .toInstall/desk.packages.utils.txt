@@ -1,5 +1,14 @@
 # Base desktop utils
+# Cleaner
+sweeper
+# Broswers
 firefox
+# Terminal emulator
 alacritty
 xournalpp
+# Archive manager
+ark
+# Video players
 vlc
+# Calculator
+qalculate-gtk

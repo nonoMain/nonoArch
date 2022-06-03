@@ -129,12 +129,20 @@ if [[ "$advenced_copy_log_to_machine" == 'true' ]]; then
 fi
 
 echo_msg_tty "--------------------------------------------------------------------------------"
+echo_msg_tty ""
+echo_msg_tty "                       ██████╗░░█████╗░███╗░░██╗███████╗"
+echo_msg_tty "                       ██╔══██╗██╔══██╗████╗░██║██╔════╝"
+echo_msg_tty "                       ██║░░██║██║░░██║██╔██╗██║█████╗░░"
+echo_msg_tty "                       ██║░░██║██║░░██║██║╚████║██╔══╝░░"
+echo_msg_tty "                       ██████╔╝╚█████╔╝██║░╚███║███████╗"
+echo_msg_tty "                       ╚═════╝░░╚════╝░╚═╝░░╚══╝╚══════╝"
+echo_msg_tty ""
 echo_msg_tty "                            Installation finished"
 echo_msg_tty "                 Please eject the installation media and reboot"
+echo_msg_tty "--------------------------------------------------------------------------------"
 if [[ "$advenced_copy_log_to_machine" == 'true' ]]; then
 	echo_msg_tty "           Logs are available at /root/nonoArch.logs on the new system"
 	echo_msg_tty "            and also in $SCRIPT_DIR/logs on the live system"
 else
 	echo_msg_tty "         Logs are available in $SCRIPT_DIR/logs on the live system"
 fi
-echo_msg_tty "--------------------------------------------------------------------------------"
