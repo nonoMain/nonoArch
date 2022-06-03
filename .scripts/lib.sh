@@ -478,7 +478,12 @@ parse_info ()
 	parsed_check_advenced
 
 	if [[ $to_exit == 'true' ]]; then
-		false
+		echo -e "[${MSG_COLOR}Instructions:${NC}]" > /dev/tty
+		echo_warning_msg_tty "Exiting..."
+		echo_warning_msg_tty "just edit the setup.yml file and run the script again"
+		echo_msg_tty "edit the script by running: $EDITOR $SCRIPT_DIR/setup.yml"
+		echo_msg_tty "run the script by running: $SCRIPT_DIR/nonoArch.sh"
+		exit
 	fi
 }
 

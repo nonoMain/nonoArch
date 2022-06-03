@@ -18,6 +18,7 @@ echo_msg_tty "      ╚═╝░░╚══╝░╚════╝░╚═╝
 echo_msg_tty "--------------------------------------------------------------------------------"
 echo_msg_tty "                         Easy | Quick |  Custom"
 echo_msg_tty "              Installer script for Arch Linux written by nonoMain"
+echo_msg_tty "                 (default user: admin, default password: 1234)"
 echo_msg_tty "--------------------------------------------------------------------------------"
 echo
 
