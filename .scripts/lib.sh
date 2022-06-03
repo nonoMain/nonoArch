@@ -211,7 +211,12 @@ parsed_check_disk ()
 		echo_error_msg_tty "Disk path didn't detected"
 		to_exit='true'
 	else
-		echo_ok_msg_tty "Disk path: $disk_path"
+		if [[ -e "$disk_path"  ]] && [[ ! -z $(lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_path" )") ]]; then
+			echo_ok_msg_tty "Script will install on $disk_path [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_path" )" | awk '{print $2}' )]"
+		else
+			echo_error_msg_tty "Disk path doesn't exist or isn't a disk"
+			to_exit='true'
+		fi
 	fi
 	if [[ -z $disk_auto_allocate ]]; then
 		echo_error_msg_tty "Disk auto allocate didn't detected"
@@ -262,7 +267,7 @@ parsed_check_disk ()
 					echo_ok_msg_tty "Disk partitions boot partition: $disk_partitions_boot_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_boot_partition" )" | awk '{print $2}' )] (exists)"
 					parsed_info_has_boot='true'
 				else
-					echo_error_msg_tty "Disk partitions boot partition: $disk_partitions_boot_partition doesn't exist"
+					echo_error_msg_tty "Disk partitions boot partition: $disk_partitions_boot_partition doesn't exist or isn't a disk"
 					to_exit='true'
 				fi
 			fi
@@ -276,7 +281,7 @@ parsed_check_disk ()
 					echo_ok_msg_tty "Disk partitions swap partition: $disk_partitions_swap_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_swap_partition" )" | awk '{print $2}' )] (exists)"
 					parsed_info_has_swap='true'
 				else
-					echo_error_msg_tty "Disk partitions swap partition: $disk_partitions_swap_partition doesn't exist"
+					echo_error_msg_tty "Disk partitions swap partition: $disk_partitions_swap_partition doesn't exist or isn't a disk"
 					to_exit='true'
 				fi
 			fi
@@ -289,7 +294,7 @@ parsed_check_disk ()
 				if [[ -e "$disk_partitions_root_partition"  ]] && [[ ! -z $(lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_root_partition" )") ]]; then
 					echo_ok_msg_tty "Disk partitions root partition: $disk_partitions_root_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_root_partition" )" | awk '{print $2}' )] (exists)"
 				else
-					echo_error_msg_tty "Disk partitions root partition: $disk_partitions_root_partition doesn't exist"
+					echo_error_msg_tty "Disk partitions root partition: $disk_partitions_root_partition doesn't exist or isn't a disk"
 					to_exit='true'
 				fi
 			fi
@@ -303,7 +308,7 @@ parsed_check_disk ()
 					echo_ok_msg_tty "Disk partitions home partition: $disk_partitions_home_partition [$( lsblk -n -o NAME,SIZE | grep -w "$( basename "$disk_partitions_home_partition" )" | awk '{print $2}' )] (exists)"
 					parsed_info_has_home='true'
 				else
-					echo_error_msg_tty "Disk partitions home partition: $disk_partitions_home_partition doesn't exist"
+					echo_error_msg_tty "Disk partitions home partition: $disk_partitions_home_partition doesn't exist or isn't a disk"
 					to_exit='true'
 				fi
 			fi
