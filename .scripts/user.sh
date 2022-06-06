@@ -41,8 +41,8 @@ install_aurs_from_file ()
 if [[ "$(curl -s https://ifconfig.co/country-iso)" == 'IL' ]]; then
 # toggle langs using Super(WinKey) + space (set to english 'us' and hebrew 'il')
 cat > ~/.profile << EOF
-echo "# toggle langs using alt+shift (set to english 'us' and hebrew 'il')"
-echo "setxkbmap -option grp:win_space_toggle us,il"
+# toggle langs using alt+shift (set to english 'us' and hebrew 'il')
+setxkbmap -option grp:win_space_toggle us,il
 EOF
 fi
 
