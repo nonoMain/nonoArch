@@ -5,8 +5,6 @@
 
 ##------------------------don't touch----------------------##
 
-kernel=$advenced_kernel
-
 pacstrap_package ()
 {
 	local package=$1; shift
@@ -113,7 +111,7 @@ esac
 
 pacstrap_package "base"
 pacstrap_package "base-devel"
-pacstrap_package "$kernel"
+pacstrap_package "$advenced_kernel"
 pacstrap_package "$microcode"
 pacstrap_package "linux-firmware"
 pacstrap_package "grub"
@@ -123,6 +121,36 @@ pacstrap_package "os-prober"
 pacstrap_package "dosfstools"
 pacstrap_package "cryptsetup"
 pacstrap_package "networkmanager"
+
+if [[ $advenced_install_vm_utils == 'true' ]]; then
+	hypervisor=$(systemd-detect-virt)
+	if [[ "$hypervisor" =~ ^(kvm|vmware|oracle|microsoft)$ ]]; then
+		echo_msg "--------------------------------------------------------------------------------"
+		echo_msg "                    Pacstrapping & enabling $hypervisor utils"
+		echo_msg "--------------------------------------------------------------------------------"
+		case $hypervisor in
+			kvm )
+				pacstrap_package "qemu-guest-agent"
+				systemctl enable qemu-guest-agent --root=/mnt
+				;;
+			vmware )
+				pacstrap_package "open-vm-tools"
+				systemctl enable vmtoolsd --root=/mnt
+				systemctl enable vmware-vmblock-fuse --root=/mnt
+				;;
+			oracle )
+				pacstrap_package "virtualbox-guest-utils"
+				systemctl enable vboxservice --root=/mnt
+				;;
+			microsoft )
+				pacstrap_package "hyperv"
+				systemctl enable hv_fcopy_daemon --root=/mnt
+				systemctl enable hv_kvp_daemon --root=/mnt
+				systemctl enable hv_vss_daemon --root=/mnt
+				;;
+		esac
+	fi
+fi
 
 if [[ "$parsed_info_has_boot" == 'true' ]]; then
 	if [[ ! -d /sys/firmware/efi ]]; then

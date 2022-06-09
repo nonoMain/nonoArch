@@ -448,14 +448,14 @@ parsed_check_advenced ()
 		echo_error_msg_tty "Advenced copy log to machine detected but invalid (only 'true' or 'false' are allowed)"
 		to_exit='true'
 	fi
-	# advenced detect and install vm utils
-	if [[ -z $advenced_detect_and_install_vm_utils ]]; then
-		advenced_detect_and_install_vm_utils='true'
-		echo_ok_msg_tty "Detect and install vm utils: $advenced_detect_and_install_vm_utils [D]"
-	elif [[ "$advenced_detect_and_install_vm_utils" =~ ^(true|false)$ ]]; then
-		echo_ok_msg_tty "Detect and install vm utils: $advenced_detect_and_install_vm_utils [S]"
+	# install vm utils
+	if [[ -z $advenced_install_vm_utils ]]; then
+		advenced_install_vm_utils='true'
+		echo_ok_msg_tty "Install vm utils: $advenced_install_vm_utils [D]"
+	elif [[ "$advenced_install_vm_utils" =~ ^(true|false)$ ]]; then
+		echo_ok_msg_tty "Install vm utils: $advenced_install_vm_utils [S]"
 	else
-		echo_error_msg_tty "Advenced detect and install vm utils detected but invalid (only 'true' or 'false' are allowed)"
+		echo_error_msg_tty "Advenced install vm utils detected but invalid (only 'true' or 'false' are allowed)"
 		to_exit='true'
 	fi
 }
@@ -511,7 +511,7 @@ to_install_desk_creative='$to_install_desk_creative'
 to_install_desk_office='$to_install_desk_office'
 advenced_kernel='$advenced_kernel'
 advenced_copy_log_to_machine='$advenced_copy_log_to_machine'
-advenced_detect_and_install_vm_utils='$advenced_detect_and_install_vm_utils'
+advenced_install_vm_utils='$advenced_install_vm_utils'
 parsed_info_has_swap='$parsed_info_has_swap'
 parsed_info_has_boot='$parsed_info_has_boot'
 parsed_info_has_home='$parsed_info_has_home'

@@ -114,4 +114,4 @@ disk:
 #advenced:
 #  kernel: 'linux'
 #  copy_log_to_machine: 'true'
-#  detect_and_install_vm_utils: 'true'
+#  install_vm_utils: 'true'
