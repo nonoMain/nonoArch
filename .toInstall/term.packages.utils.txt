@@ -44,3 +44,5 @@ bat
 cmatrix
 figlet
 cowsay
+# File explorer
+vifm

@@ -2,3 +2,4 @@
 brave-bin
 # Fonts
 nerd-fonts-hack
+ttf-twemoji

@@ -8,6 +8,8 @@ alacritty
 xournalpp
 # Archive manager
 ark
+# Image viewer
+gwenview
 # Video players
 vlc
 # Calculator
