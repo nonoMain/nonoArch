@@ -5,7 +5,6 @@ strace
 tldr
 lazygit
 fzf
-pandoc
 # Languages
 nasm
 python2

@@ -123,7 +123,7 @@ elif lspci | grep -E 'Integrated Graphics Controller'; then
 fi
 
 echo_msg "--------------------------------------------------------------------------------"
-echo_msg "                      Installs & configures $graphics_title"
+echo_msg "                        Installs & configures $graphics_title"
 echo_msg "--------------------------------------------------------------------------------"
 
 if [[ $graphics_title == 'Nvidia graphics' ]]; then
