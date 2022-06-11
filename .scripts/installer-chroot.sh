@@ -77,11 +77,12 @@ if [[ $(curl -s https://ifconfig.co/country-iso) == 'IL' ]]; then
 	# sed -i 's/^#he_IL ISO-8859-8/he_IL ISO-8859-8/' /etc/locale.gen
 fi
 
-locale-gen
+echo "LC_ALL=en_US.UTF-8=" > /etc/environment
 cat > /etc/locale.conf <<EOF
 LANG="en_US.UTF-8"
-LC_TIME="en_US.UTF-8"
 EOF
+
+locale-gen
 
 # Add sudo no password rights
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
