@@ -2,7 +2,6 @@
 neovim
 # Utils
 strace
-tldr
 lazygit
 fzf
 # Languages
@@ -14,6 +13,7 @@ go
 gcc
 clang
 lua
+rust
 # tools for languages
 valgrind
 python-pip

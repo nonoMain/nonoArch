@@ -6,6 +6,8 @@ tree
 grep
 ripgrep
 openssh
+sshfs
+tldr
 make
 cmake
 automake
