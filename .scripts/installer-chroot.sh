@@ -77,7 +77,7 @@ if [[ $(curl -s https://ifconfig.co/country-iso) == 'IL' ]]; then
 	# sed -i 's/^#he_IL ISO-8859-8/he_IL ISO-8859-8/' /etc/locale.gen
 fi
 
-echo "LC_ALL=en_US.UTF-8=" > /etc/environment
+echo "LC_ALL=en_US.UTF-8" > /etc/environment
 cat > /etc/locale.conf <<EOF
 LANG="en_US.UTF-8"
 EOF
