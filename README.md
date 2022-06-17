@@ -103,17 +103,15 @@ The script that runs is [nonoArch.sh](./nonoArch.sh) and it executes the other s
 6. [post-live-env.sh](./.scripts/post-live-env.sh) - runs on the live environment as root
 
 ## Notes
-This script is a reupload of an old Arch install script of mine.
-The script is installing arch in a way that I think is good and if you are not me this will very likely won't
-be well suited for you so I'd recommend looking at the way I did it and fork it to be just like you want it,
-I recommend building of my repository and not others simply because how light it is compared to other scripts that
-does the same stuff.
+- This script is an improved version of an old Arch install script I had.
+- The script is installing arch in a way that I think is good and if you are not me this will very likely won't be well suited for you so I'd recommend looking at the way I did it and fork it to be as you desire,
+- I recommend using my repository mainly because of how light it is compared to other scripts that does the same stuff.
 
 ### Credits
-the ASCII art is from [fsymbols](https://fsymbols.com/generators/carty/)
-the project that my first arch installer was based upon was [easy-arch](https://github.com/classy-giraffe/easy-arch)
-a project that I took nice design ideas (the bios grub support, the logs, the different desktop environments) from was [ArchTitus](https://github.com/ChrisTitusTech/ArchTitus)
+- the project that my first arch installer was based upon was [easy-arch](https://github.com/classy-giraffe/easy-arch)
+- the project that I took design ideas (the bios grub support, the different desktop environments) from was [ArchTitus](https://github.com/ChrisTitusTech/ArchTitus)
+- the ASCII art is from [fsymbols](https://fsymbols.com/generators/carty/)
 
-### Alternatives
-there are two ways you can look at it, if you want more minimal script that works great then defintley take a look at [easy-arch](https://github.com/classy-giraffe/easy-arch)
-if you were looking to somethings even more comfortable and easy then use [ArchTitus](https://github.com/ChrisTitusTech/ArchTitus)
+### Nice alternatives
+- there are two ways you can look at it, if you want more minimal script that works great then defintley take a look at [easy-arch](https://github.com/classy-giraffe/easy-arch)
+- if you were looking to somethings even more comfortable and easy then use [ArchTitus](https://github.com/ChrisTitusTech/ArchTitus)

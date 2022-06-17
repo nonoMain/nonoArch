@@ -14,9 +14,9 @@ gcc
 clang
 lua
 rust
+dotnet-runtime
+dotnet-sdk
 # tools for languages
 valgrind
 python-pip
 ghex
-# Language servers
-gopls
