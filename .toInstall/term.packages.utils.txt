@@ -17,6 +17,8 @@ htop
 stow
 neofetch
 lsb-release
+v4l2loopback-dkms
+v4l2loopback-utils
 # Tools
 tmux
 net-tools
