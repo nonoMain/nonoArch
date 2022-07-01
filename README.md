@@ -87,6 +87,8 @@ If the script crashed and the logs don't help you that much so I'd recommend to 
 in order to rerun the script just run:
 ```bash
 # You can see the disk you chose in the 'setup.yml' file
+# Delete the entire disk that you installed the os on
+# (if you installed it only on some partitions use fdisk to delete them)
 sgdisk -Zo <path/to/the/disk>
 # reboot the live system (it will lose all the installation files)
 reboot
@@ -101,6 +103,15 @@ The script that runs is [nonoArch.sh](./nonoArch.sh) and it executes the other s
 4. [installer-chroot.sh](./.scripts/installer-chroot.sh) - runs on the installed system as root
 5. [user.sh](./.scripts/user.sh) - runs on the installed system as admin user
 6. [post-live-env.sh](./.scripts/post-live-env.sh) - runs on the live environment as root
+
+## More stuff you can do
+for more useful stuff to do on your arch system look under [here](./.usefull/)
+
+### Install noise suppression
+install [noise-suppression-for-voice](https://github.com/werman/noise-suppression-for-voice) and follow the insturctions
+
+or if you use pulseaudio and want to save some time run [this](./.usefull/install_noise_suppression.sh)
+script to install noise-suppression-for-voice and configure it (make sure to fill the missing params inside the script)
 
 ## Notes
 - This script is an improved version of an old Arch install script I had.
