@@ -82,6 +82,19 @@ cat > /etc/locale.conf <<EOF
 LANG="en_US.UTF-8"
 EOF
 
+echo_msg "--------------------------------------------------------------------------------"
+echo_msg "                           Setting up XDG ENV Variables"
+echo_msg "--------------------------------------------------------------------------------"
+
+cat > /etc/profile.d/0000-xdg-dirs.sh  << EOF
+#!/bin/sh
+
+export XDG_CONFIG_HOME="\${HOME}/.config"
+export XDG_CACHE_HOME="\${HOME}/.cache"
+export XDG_DATA_HOME="\${HOME}/.local/share"
+export XDG_STATE_HOME="\${HOME}/.local/state"
+EOF
+
 locale-gen
 
 # Add sudo no password rights
