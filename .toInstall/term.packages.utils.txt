@@ -8,6 +8,7 @@ ripgrep
 openssh
 sshfs
 tldr
+aha
 make
 cmake
 automake
