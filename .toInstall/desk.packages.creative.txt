@@ -2,3 +2,4 @@
 blender
 gimp
 obs-studio
+audacity
