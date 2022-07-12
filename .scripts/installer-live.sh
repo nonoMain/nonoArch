@@ -97,17 +97,15 @@ fi
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                             Pacstrapping base system"
 echo_msg "--------------------------------------------------------------------------------"
-CPU_TYPE=$(grep vendor_id /proc/cpuinfo)
-case "$CPU_TYPE" in
-	GenuineIntel)
-		microcode=intel-ucode
-		echo_msg "Intel microcode is being installed"
-		;;
-	AuthenticAMD)
-		microcode=amd-ucode
-		echo_msg "AMD microcode is being installed"
-		;;
-esac
+
+proc_type=$(lscpu)
+if grep -E "GenuineIntel" <<< ${proc_type}; then
+	microcode=intel-ucode
+	echo_msg "Intel microcode is being installed"
+elif grep -E "AuthenticAMD" <<< ${proc_type}; then
+	microcode=amd-ucode
+	echo_msg "AMD microcode is being installed"
+fi
 
 pacstrap_package "base"
 pacstrap_package "base-devel"
