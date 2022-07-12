@@ -92,7 +92,6 @@ else
 fi
 
 # copy the .toInstall directory to the home of the new user on the new system
-mkdir -p /mnt/home/$admin_user_name/
 cp -r $SCRIPT_DIR/.toInstall/ /mnt/home/$admin_user_name/
 
 arch-chroot /mnt /usr/bin/runuser -u $admin_user_name -- /bin/bash -e <<EOF &> $SCRIPT_DIR/logs/user.log && worked="true" || worked="false"

@@ -56,7 +56,6 @@ echo_msg "----------------------------------------------------------------------
 echo_msg "                          Set timezone to $timezone_link_data"
 echo_msg "--------------------------------------------------------------------------------"
 ln -sf /usr/share/zoneinfo/$timezone_link_data /etc/localtime
-timedatectl set-ntp true
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                              Setting up the clock"
