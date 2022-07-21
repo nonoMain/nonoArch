@@ -155,7 +155,7 @@ install_packages_from_file "$HOME/.toInstall/term.packages.must.txt"
 [[ "$to_install_term_utils" == 'true' ]] && install_packages_from_file "$HOME/.toInstall/term.packages.utils.txt"
 [[ "$to_install_term_dev" == 'true' ]] && install_packages_from_file "$HOME/.toInstall/term.packages.dev.txt"
 
-if [[ "$system_desktop_environment" != 'server' ]]; then
+if [[ "$system_desktop_environment" != 'none' ]]; then
 	echo_msg "--------------------------------------------------------------------------------"
 	echo_msg "                        Installing desktop packages [$system_desktop_environment]"
 	echo_msg "--------------------------------------------------------------------------------"

@@ -71,7 +71,7 @@ echo_msg "                             Installing Aur packages"
 echo_msg "--------------------------------------------------------------------------------"
 
 install_aurs_from_file "$HOME/.toInstall/term.aurs.dev.txt"
-if [[ "$system_desktop_environment" != 'server' ]]; then
+if [[ "$system_desktop_environment" != 'none' ]]; then
 	install_aurs_from_file "$HOME/.toInstall/desk.aurs.must.txt"
 	[[ "$to_install_desk_utils" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.utils.txt" || echo_warning_msg "Skipping desk.aurs.utils.txt" )
 	[[ "$to_install_desk_dev" == 'true' ]] && ( install_aurs_from_file "$HOME/.toInstall/desk.aurs.dev.txt" || echo_warning_msg "Skipping desk.aurs.dev.txt" )

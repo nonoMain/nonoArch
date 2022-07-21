@@ -177,7 +177,7 @@ parsed_check_system ()
 		to_exit='true'
 	elif [[ "$system_desktop_environment" =~ ^(kde|gnome|xfce)$ ]]; then
 		echo_ok_msg_tty "Desktop environment: $system_desktop_environment"
-	elif [[ "$system_desktop_environment" =~ ^server$ ]]; then
+	elif [[ "$system_desktop_environment" =~ ^none$ ]]; then
 		echo_ok_msg_tty "It's a server, no desktop packages/aurs will be installed"
 	else
 		echo_error_msg_tty "Desktop environment detected but not supported or invalid"
