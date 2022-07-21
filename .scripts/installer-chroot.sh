@@ -38,30 +38,36 @@ install_packages_from_file ()
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "           Setting up mirrors, keys and parallel Downloading for downloads"
 echo_msg "--------------------------------------------------------------------------------"
-
+echo_msg "Bug Tag No.1 passed"
 # setup the mirror list
 pacman -S --noconfirm --needed pacman-contrib curl
 pacman -S --noconfirm --needed reflector rsync grub arch-install-scripts git
+echo_msg "Bug Tag No.2 passed"
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 # update keyring
+echo_msg "Bug Tag No.3 passed"
 pacman -S --noconfirm archlinux-keyring
 pacman -S --noconfirm --needed pacman-contrib
 setup_mirrors_using_reflector
+echo_msg "Bug Tag No.4 passed"
 
 sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 pacman -Sy --noconfirm --needed
+echo_msg "Bug Tag No.5 passed"
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                          Set timezone to $timezone_link_data"
 echo_msg "--------------------------------------------------------------------------------"
 ln -sf /usr/share/zoneinfo/$timezone_link_data /etc/localtime
+echo_msg "Bug Tag No.6 passed"
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                              Setting up the clock"
 echo_msg "--------------------------------------------------------------------------------"
 # Setting up clock.
 hwclock --systohc
+echo_msg "Bug Tag No.7 passed"
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                Generating and setting up language as US and locales"
@@ -75,6 +81,7 @@ if [[ $(curl -s https://ifconfig.co/country-iso) == 'IL' ]]; then
 	sed -i 's/^#he_IL.UTF-8 UTF-8/he_IL.UTF-8 UTF-8/' /etc/locale.gen
 	# sed -i 's/^#he_IL ISO-8859-8/he_IL ISO-8859-8/' /etc/locale.gen
 fi
+echo_msg "Bug Tag No.8 passed"
 
 echo "LC_ALL=en_US.UTF-8" > /etc/environment
 cat > /etc/locale.conf <<EOF
@@ -95,11 +102,13 @@ export XDG_STATE_HOME="\${HOME}/.local/state"
 EOF
 
 locale-gen
+echo_msg "Bug Tag No.9 passed"
 
 # Add sudo no password rights
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
 sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
+echo_msg "Bug Tag No.10 passed"
 # Installing grub
 if [[ $parsed_info_has_boot == 'true' ]]; then
 	# check if we have uefi or bios
@@ -117,15 +126,18 @@ if [[ $parsed_info_has_boot == 'true' ]]; then
 	echo_msg "--------------------------------------------------------------------------------"
 	grub-mkconfig -o /boot/grub/grub.cfg
 fi
+echo_msg "Bug Tag No.11 passed"
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                           Adding user $admin_user_name as admin"
 echo_msg "--------------------------------------------------------------------------------"
 useradd -m $admin_user_name
 usermod -aG wheel,tty $admin_user_name
+echo_msg "Bug Tag No.12 passed"
 
 echo "root:$root_user_password" | chpasswd
 echo "$admin_user_name:$admin_user_password" | chpasswd
+echo_msg "Bug Tag No.13 passed"
 
 if lspci | grep -E 'NVIDIA|GeForce'; then
 	graphics_title='Nvidia graphics'
@@ -134,6 +146,7 @@ elif lspci | grep -E 'Radeon'; then
 elif lspci | grep -E 'Integrated Graphics Controller'; then
 	graphics_title='Integrated graphics'
 fi
+echo_msg "Bug Tag No.14 passed"
 
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                        Installs & configures $graphics_title"
@@ -148,12 +161,14 @@ elif [[ $graphics_title == 'Integrated graphics' ]]; then
 	install_packages_from_file "$HOME/.toInstall/graphics.packages.integrated.txt"
 fi
 
+echo_msg "Bug Tag No.15 passed"
 echo_msg "--------------------------------------------------------------------------------"
 echo_msg "                           Installing terminal packages"
 echo_msg "--------------------------------------------------------------------------------"
 install_packages_from_file "$HOME/.toInstall/term.packages.must.txt"
 [[ "$to_install_term_utils" == 'true' ]] && install_packages_from_file "$HOME/.toInstall/term.packages.utils.txt"
 [[ "$to_install_term_dev" == 'true' ]] && install_packages_from_file "$HOME/.toInstall/term.packages.dev.txt"
+echo_msg "Bug Tag No.16 passed"
 
 if [[ "$system_desktop_environment" != 'none' ]]; then
 	echo_msg "--------------------------------------------------------------------------------"
@@ -175,4 +190,6 @@ if [[ "$system_desktop_environment" != 'none' ]]; then
 
 	# Lighdm 
 	sed -i 's/^#logind-check-graphical=true/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
+	echo_msg "Bug Tag No.17 passed"
 fi
+echo_msg "Bug Tag No.18 passed"
